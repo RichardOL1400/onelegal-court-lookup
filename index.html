@@ -8,9 +8,10 @@
   <style>
     /* Global */
     * { font-family: Arial, sans-serif !important; }
+    html { background: transparent; }
     body { margin: 0; padding: 0; background: transparent; }
 
-    /* Card container (matches your element.style) */
+    /* Card container */
     #form-container {
       width: 100%;
       max-width: 600px;
@@ -19,20 +20,19 @@
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       box-sizing: border-box;
-      margin: 0 auto; /* centers in iframe */
+      margin: 0 auto;
     }
 
     /* Header */
     .main-header {
       font-size: 18px;
       margin-top: 5px !important;
-      margin-bottom: 3px;
+      margin-bottom: 10px;
       font-weight: 700;
       color: #111;
     }
 
-    /* Helper text / disclaimer */
-    .disclaimer, .muted {
+    .muted {
       color: #666;
       font-size: 12px;
       font-style: italic;
@@ -41,9 +41,7 @@
     }
 
     /* Form layout */
-    .field {
-      margin-bottom: 22px;
-    }
+    .field { margin-bottom: 22px; }
 
     #form-container label,
     #form-container input,
@@ -55,7 +53,6 @@
 
     #form-container label {
       margin-bottom: 10px;
-      display: block;
       font-size: 14px;
       font-weight: 600;
       color: #111;
@@ -123,42 +120,60 @@
       filter: brightness(0.97);
     }
 
-    /* Results */
-    #results {
-      margin-top: 22px;
+    /* Info cards (eFiling + results) */
+    .info-card {
+      margin-top: 18px;
       padding: 18px;
       border: 1px solid #e6e6e6;
       border-radius: 8px;
       background: #fff;
     }
 
-    #results.hidden {
-      display: none;
-    }
+    .info-card.hidden { display: none; }
 
-    #results h3 {
-      margin: 14px 0 10px 0;
+    .info-card h3 {
+      margin: 0 0 10px 0;
       font-size: 16px;
       font-weight: 700;
       color: #111;
     }
 
-    #results hr {
+    .info-card hr {
       border: 0;
       border-top: 1px solid #eee;
       margin: 14px 0;
     }
 
-    #results .row {
+    .info-card .row {
       margin: 8px 0;
       font-size: 14px;
       color: #111;
     }
 
-    #results .k {
+    .info-card .k {
       font-weight: 700;
       display: inline-block;
       min-width: 210px;
+    }
+
+    /* Subtle badge for clarity */
+    .badge {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #eef5fb;
+      color: #1e6f97;
+      vertical-align: middle;
+      font-weight: 700;
+    }
+
+    .note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #666;
+      font-style: italic;
     }
 
     /* Small screens */
@@ -170,7 +185,7 @@
       .button-row {
         flex-direction: column;
       }
-      #results .k {
+      .info-card .k {
         min-width: 0;
         display: block;
         margin-bottom: 4px;
@@ -191,7 +206,10 @@
       </select>
     </div>
 
-    <div class="field">
+    <!-- eFiling shows as soon as Court is selected (DisplayName-level) -->
+    <div id="efiling" class="info-card hidden"></div>
+
+    <div class="field" style="margin-top: 18px;">
       <label for="name">Location</label>
       <select id="name" disabled>
         <option value="">Select a Location…</option>
@@ -203,7 +221,8 @@
       <button id="reset-button" type="button">Reset</button>
     </div>
 
-    <div id="results" class="hidden"></div>
+    <!-- Location-specific results (DisplayName + Name) -->
+    <div id="results" class="info-card hidden"></div>
   </div>
 
   <!-- Papa Parse handles CSV correctly (including commas inside quoted fields) -->
@@ -215,19 +234,57 @@
       const $name    = document.getElementById('name');
       const $submit  = document.getElementById('submit-button');
       const $reset   = document.getElementById('reset-button');
+      const $efiling = document.getElementById('efiling');
       const $results = document.getElementById('results');
 
       const uniq = (arr) => [...new Set(arr)].sort((a, b) => String(a).localeCompare(String(b)));
       const esc = (s) => String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
       const isOne = (v) => String(v).trim() === "1";
 
+      function hide(el) { el.classList.add('hidden'); el.innerHTML = ''; }
+      function show(el) { el.classList.remove('hidden'); }
+
       function resetResults() {
-        $results.classList.add('hidden');
-        $results.innerHTML = '';
+        hide($results);
+      }
+
+      function resetEFiling() {
+        hide($efiling);
       }
 
       function setSubmitEnabled() {
         $submit.disabled = !($display.value && $name.value);
+      }
+
+      function renderEFiling(courtWide) {
+        // courtWide is a row for the selected DisplayName (same values repeated)
+        const canEF = isOne(courtWide.CanEfiling);
+
+        const status = courtWide.EFilingStatus || "";
+        const divisions = courtWide.EFilingDivisions || "";
+        const deadline = courtWide.EFilingDeadline || "";
+        const recommendedBy = courtWide.EFilingRecommendedBy || "";
+        const efm = courtWide.EFM || "";
+        const maxDoc = courtWide.MaxEfileDocSize || "";
+        const maxEnv = courtWide.MaxEfileEnvSize || "";
+
+        $efiling.innerHTML = `
+          <h3>eFiling <span class="badge">Court-wide</span></h3>
+          <div class="row"><span class="k">Availability:</span> ${canEF ? "Available" : "Not Available"}</div>
+          ${canEF ? `
+            ${status ? `<div class="row"><span class="k">Status:</span> ${esc(status)}</div>` : ``}
+            ${divisions ? `<div class="row"><span class="k">Divisions:</span> ${esc(divisions)}</div>` : ``}
+            ${deadline ? `<div class="row"><span class="k">Court Deadline:</span> ${esc(deadline)}</div>` : ``}
+            ${recommendedBy ? `<div class="row"><span class="k">Recommended By:</span> Submit through One Legal by at least ${esc(recommendedBy)}</div>` : ``}
+            ${efm ? `<div class="row"><span class="k">EFM:</span> ${esc(efm)}</div>` : ``}
+            ${maxDoc ? `<div class="row"><span class="k">Max Doc Size:</span> ${esc(maxDoc)}</div>` : ``}
+            ${maxEnv ? `<div class="row"><span class="k">Max Envelope Size:</span> ${esc(maxEnv)}</div>` : ``}
+            <div class="note">eFiling details apply to the court overall (not a specific courthouse location).</div>
+          ` : `
+            <div class="note">This court does not currently offer eFiling through One Legal.</div>
+          `}
+        `;
+        show($efiling);
       }
 
       // Load CSV (must be named court-db.csv in the same folder as this file)
@@ -236,10 +293,12 @@
       const data = parsed.data;
 
       // REQUIRED CSV HEADERS (exact):
-      // DisplayName, Name, CanFile, FileServiceLevel, FileDeadline,
+      // DisplayName, Name,
+      // CanEfiling, EFilingDivisions, EFilingStatus, EFilingDeadline, EFilingRecommendedBy, EFM, MaxEfileDocSize, MaxEfileEnvSize,
+      // CanFile, FileServiceLevel, FileDeadline,
       // CanCourtesyCopy, CCDeliveryServiceLevel, CCDeliveryDeadline
 
-      // Populate DisplayName dropdown
+      // Populate Court (DisplayName)
       uniq(data.map(r => r.DisplayName).filter(Boolean)).forEach(v => {
         const o = document.createElement('option');
         o.value = v;
@@ -249,10 +308,18 @@
 
       $display.addEventListener('change', () => {
         resetResults();
+        resetEFiling();
+
+        // Reset location dropdown
         $name.innerHTML = '<option value="">Select a Location…</option>';
         $name.disabled = !$display.value;
 
         if ($display.value) {
+          // Render eFiling immediately (court-wide)
+          const courtWide = data.find(r => r.DisplayName === $display.value) || {};
+          renderEFiling(courtWide);
+
+          // Populate Locations for the selected court
           const names = uniq(
             data
               .filter(r => r.DisplayName === $display.value)
@@ -284,8 +351,10 @@
         const canCC   = isOne(row.CanCourtesyCopy);
 
         $results.innerHTML = `
+          <h3>Location-specific Services <span class="badge">Courthouse</span></h3>
           <div class="row"><span class="k">Court:</span> ${esc(row.DisplayName)}</div>
           <div class="row"><span class="k">Location:</span> ${esc(row.Name)}</div>
+
           <hr/>
           <h3>Physical Court Filing</h3>
           <div class="row"><span class="k">Availability:</span> ${canFile ? "Available" : "Not Available"}</div>
@@ -293,6 +362,7 @@
             <div class="row"><span class="k">Service Level:</span> ${esc(row.FileServiceLevel)}</div>
             <div class="row"><span class="k">Deadline:</span> ${esc(row.FileDeadline)}</div>
           ` : ""}
+
           <hr/>
           <h3>Courtesy Copy Delivery</h3>
           <div class="row"><span class="k">Availability:</span> ${canCC ? "Available" : "Not Available"}</div>
@@ -302,7 +372,7 @@
           ` : ""}
         `;
 
-        $results.classList.remove('hidden');
+        show($results);
       });
 
       $reset.addEventListener('click', () => {
@@ -310,6 +380,7 @@
         $name.innerHTML = '<option value="">Select a Location…</option>';
         $name.disabled = true;
         $submit.disabled = true;
+        resetEFiling();
         resetResults();
       });
     })();

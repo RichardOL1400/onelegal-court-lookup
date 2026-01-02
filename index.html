@@ -6,15 +6,13 @@
   <title>Court Service Availability</title>
 
   <style>
-    /* Global */
     * { font-family: Arial, sans-serif !important; }
     html, body { background: transparent; margin: 0; padding: 0; }
     :root { --brand: #1e6f97; --text: #111; --muted: #666; --border: #e6e6e6; --soft: #eef5fb; }
 
-    /* Container card */
     #form-container {
       width: 100%;
-      max-width: 760px;                 /* a bit wider feels more “world-class” */
+      max-width: 760px;
       padding: 30px;
       background: #fff;
       border-radius: 10px;
@@ -23,7 +21,6 @@
       margin: 0 auto;
     }
 
-    /* Header / intro */
     .main-header {
       font-size: 18px;
       font-weight: 700;
@@ -37,7 +34,6 @@
       line-height: 1.35;
     }
 
-    /* Form fields */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -72,7 +68,6 @@
       outline: none;
     }
 
-    /* Actions */
     .actions {
       display: flex;
       gap: 12px;
@@ -93,7 +88,6 @@
     }
     #reset-button:hover { filter: brightness(0.97); }
 
-    /* Info cards */
     .info-card {
       margin-top: 18px;
       padding: 18px;
@@ -129,7 +123,6 @@
       margin: 14px 0;
     }
 
-    /* Rows: label + value with proper wrapping */
     .row {
       display: flex;
       gap: 10px;
@@ -146,7 +139,7 @@
     }
     .v {
       flex: 1 1 auto;
-      min-width: 0;              /* critical for flex wrapping */
+      min-width: 0;
       white-space: normal;
       overflow-wrap: anywhere;
       word-break: break-word;
@@ -157,7 +150,6 @@
       .k { flex: none; max-width: none; }
     }
 
-    /* Status pills */
     .pill {
       display: inline-flex;
       align-items: center;
@@ -178,7 +170,6 @@
     .pill.unavailable { color: #9b1c1c; background: #fdeaea; border-color: #f7c8c8; }
     .pill.unknown { color: #6b4f0f; background: #fff6df; border-color: #f2e1b0; }
 
-    /* Deadline highlight */
     .deadline-box {
       padding: 12px 14px;
       border-radius: 10px;
@@ -206,7 +197,6 @@
       line-height: 1.35;
     }
 
-    /* Progressive disclosure */
     .toggle {
       display: inline-flex;
       align-items: center;
@@ -224,7 +214,6 @@
     .toggle:hover { filter: brightness(0.98); }
     .details.hidden { display: none; }
 
-    /* Empty states */
     .empty {
       color: var(--muted);
       font-size: 13px;
@@ -232,7 +221,17 @@
       margin: 0;
     }
 
-    /* Light CTA */
+    .prompt {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #fbfbfb;
+      border: 1px dashed #dedede;
+      font-size: 13px;
+      color: #1a1a1a;
+    }
+    .prompt strong { color: #111; }
+
     .cta {
       margin-top: 12px;
       font-size: 13px;
@@ -244,7 +243,6 @@
     }
     .cta strong { color: #111; }
 
-    /* Footer */
     .footer {
       margin-top: 18px;
       padding-top: 12px;
@@ -260,7 +258,7 @@
   <div id="form-container">
     <div class="main-header">Court Service Availability</div>
     <div class="subhead">
-      Select a court to see <strong>eFiling (court-wide)</strong>. Then select a courthouse location to see <strong>physical services (location-specific)</strong>.
+      Select a court to see <strong>eFiling (court-wide)</strong>. If you need physical filing or courtesy copy delivery cutoffs, select a courthouse location.
     </div>
 
     <div class="grid">
@@ -272,7 +270,7 @@
       </div>
 
       <div>
-        <label for="name">Courthouse Location</label>
+        <label for="name">Courthouse Location (for physical services)</label>
         <select id="name" disabled>
           <option value="">Select a Location…</option>
         </select>
@@ -286,6 +284,9 @@
     <!-- eFiling (court-wide) -->
     <div id="efiling" class="info-card hidden"></div>
 
+    <!-- Prompt that appears after Court selection to guide to physical services -->
+    <div id="physicalPrompt" class="prompt hidden"></div>
+
     <!-- Location-specific services -->
     <div id="results" class="info-card hidden"></div>
 
@@ -295,7 +296,6 @@
     </div>
   </div>
 
-  <!-- CSV parsing (handles commas/quotes correctly) -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
   <script>
@@ -305,6 +305,7 @@
     const $reset = document.getElementById('reset-button');
     const $efiling = document.getElementById('efiling');
     const $results = document.getElementById('results');
+    const $physicalPrompt = document.getElementById('physicalPrompt');
 
     const esc = s => String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
     const isOne = v => String(v).trim() === "1";
@@ -323,17 +324,29 @@
     }
 
     function pillHTML(isAvailable) {
-      if (isAvailable === true) {
-        return `<span class="pill available"><span class="dot"></span>Available</span>`;
-      }
-      if (isAvailable === false) {
-        return `<span class="pill unavailable"><span class="dot"></span>Not Available</span>`;
-      }
+      if (isAvailable === true) return `<span class="pill available"><span class="dot"></span>Available</span>`;
+      if (isAvailable === false) return `<span class="pill unavailable"><span class="dot"></span>Not Available</span>`;
       return `<span class="pill unknown"><span class="dot"></span>Unknown</span>`;
     }
 
     function scrollToEl(el) {
       try { el.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {}
+    }
+
+    function wireToggles(root) {
+      const toggles = root.querySelectorAll('[data-toggle]');
+      toggles.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-toggle');
+          const el = document.getElementById(id);
+          if (!el) return;
+          const nowHidden = el.classList.toggle('hidden');
+          const expanded = !nowHidden;
+          btn.setAttribute('aria-expanded', String(expanded));
+          btn.textContent = expanded ? "Hide details" : "Show details (EFM, size limits, status)";
+          sendHeightSoon();
+        }, { once: true });
+      });
     }
 
     function renderEFiling(courtWide, courtName) {
@@ -386,37 +399,11 @@
           </div>
 
           <div id="${detailsId}" class="details hidden" style="margin-top:10px;">
-            ${status ? `
-              <div class="row">
-                <span class="k">Status</span>
-                <span class="v">${esc(status)}</span>
-              </div>
-            ` : ""}
-
-            ${efm ? `
-              <div class="row">
-                <span class="k">EFM</span>
-                <span class="v">${esc(efm)}</span>
-              </div>
-            ` : ""}
-
-            ${maxDoc ? `
-              <div class="row">
-                <span class="k">Max Doc Size</span>
-                <span class="v">${esc(maxDoc)}</span>
-              </div>
-            ` : ""}
-
-            ${maxEnv ? `
-              <div class="row">
-                <span class="k">Max Envelope Size</span>
-                <span class="v">${esc(maxEnv)}</span>
-              </div>
-            ` : ""}
-
-            ${(!status && !efm && !maxDoc && !maxEnv) ? `
-              <p class="empty">No additional eFiling details are available for this court.</p>
-            ` : ""}
+            ${status ? `<div class="row"><span class="k">Status</span><span class="v">${esc(status)}</span></div>` : ""}
+            ${efm ? `<div class="row"><span class="k">EFM</span><span class="v">${esc(efm)}</span></div>` : ""}
+            ${maxDoc ? `<div class="row"><span class="k">Max Doc Size</span><span class="v">${esc(maxDoc)}</span></div>` : ""}
+            ${maxEnv ? `<div class="row"><span class="k">Max Envelope Size</span><span class="v">${esc(maxEnv)}</span></div>` : ""}
+            ${(!status && !efm && !maxDoc && !maxEnv) ? `<p class="empty">No additional eFiling details are available for this court.</p>` : ""}
           </div>
         ` : `
           <p class="empty">This court does not currently offer eFiling through One Legal.</p>
@@ -429,6 +416,15 @@
       sendHeightSoon();
     }
 
+    function renderPhysicalPrompt() {
+      $physicalPrompt.innerHTML = `
+        <strong>Need physical services?</strong>
+        Select a courthouse location to see physical court filing and courtesy copy delivery cutoffs for that location.
+      `;
+      show($physicalPrompt);
+      sendHeightSoon();
+    }
+
     function renderLocationServices(r) {
       const canFile = isOne(r.CanFile);
       const canCC = isOne(r.CanCourtesyCopy);
@@ -438,7 +434,7 @@
         <div class="card-title">
           <div>
             <h3>Physical Services</h3>
-            <div class="scope">Courthouse-specific — may vary by location</div>
+            <div class="scope">Courthouse-specific — varies by location</div>
           </div>
         </div>
 
@@ -490,47 +486,11 @@
       sendHeightSoon();
     }
 
-    function renderEmptyStates() {
-      hide($efiling);
-      hide($results);
-
-      if ($display.value) {
-        // Court chosen but no location yet
-        $results.innerHTML = `
-          <div class="card-title">
-            <div>
-              <h3>Physical Services</h3>
-              <div class="scope">Courthouse-specific — may vary by location</div>
-            </div>
-          </div>
-          <p class="empty">Now choose a courthouse location to see physical court filing and courtesy copy delivery cutoffs.</p>
-        `;
-        show($results);
-        sendHeightSoon();
-      }
-    }
-
-    function wireToggles(root) {
-      const toggles = root.querySelectorAll('[data-toggle]');
-      toggles.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-toggle');
-          const el = document.getElementById(id);
-          if (!el) return;
-          const nowHidden = el.classList.toggle('hidden');
-          const expanded = !nowHidden;
-          btn.setAttribute('aria-expanded', String(expanded));
-          btn.textContent = expanded ? "Hide details" : "Show details (EFM, size limits, status)";
-          sendHeightSoon();
-        }, { once: true }); // avoid duplicate handlers if re-rendered
-      });
-    }
-
-    // Load CSV
+    /* ---------- Load CSV ---------- */
     const csv = await fetch('court-db.csv', { cache: 'no-store' }).then(r => r.text());
     const data = Papa.parse(csv, { header: true, skipEmptyLines: true }).data;
 
-    // Populate courts
+    /* ---------- Populate courts ---------- */
     uniq(data.map(r => r.DisplayName).filter(Boolean)).forEach(v => {
       const o = document.createElement('option');
       o.value = v;
@@ -538,21 +498,25 @@
       $display.appendChild(o);
     });
 
-    // Court change: show court-wide eFiling immediately; populate locations; show guidance
+    /* ---------- Court selection ---------- */
     $display.addEventListener('change', () => {
-      // Reset location
+      // reset location dropdown
       $name.innerHTML = '<option value="">Select a Location…</option>';
       $name.disabled = !$display.value;
       $name.value = "";
 
-      hide($efiling);
+      // hide location-specific results
       hide($results);
 
+      // hide prompt unless we show it later
+      hide($physicalPrompt);
+
       if ($display.value) {
+        // show ONLY eFiling on court selection
         const courtWide = data.find(r => r.DisplayName === $display.value) || {};
         renderEFiling(courtWide, $display.value);
 
-        // Populate locations for this court
+        // populate locations, but do NOT show physical card yet
         const locations = uniq(
           data.filter(r => r.DisplayName === $display.value).map(r => r.Name).filter(Boolean)
         );
@@ -563,38 +527,40 @@
           $name.appendChild(o);
         });
 
-        // Show guidance empty state for physical services until location selected
-        renderEmptyStates();
+        // show a gentle prompt below eFiling guiding to select location for physical services
+        renderPhysicalPrompt();
       } else {
         hide($efiling);
         hide($results);
+        hide($physicalPrompt);
         sendHeightSoon();
       }
     });
 
-    // Location change: render immediately (no Submit button)
+    /* ---------- Location selection ---------- */
     $name.addEventListener('change', () => {
       hide($results);
       if ($display.value && $name.value) {
         const r = data.find(x => x.DisplayName === $display.value && x.Name === $name.value);
         if (r) renderLocationServices(r);
       } else {
-        renderEmptyStates();
+        sendHeightSoon();
       }
     });
 
-    // Reset
+    /* ---------- Reset ---------- */
     $reset.addEventListener('click', () => {
       $display.value = "";
       $name.innerHTML = '<option value="">Select a Location…</option>';
       $name.disabled = true;
       hide($efiling);
       hide($results);
+      hide($physicalPrompt);
       sendHeightSoon();
       scrollToEl(document.getElementById('form-container'));
     });
 
-    /* ---------- IFRAME AUTO-HEIGHT (optional but helpful) ---------- */
+    /* ---------- IFRAME AUTO-HEIGHT ---------- */
     let heightTimer = null;
     function sendHeightSoon() {
       if (heightTimer) clearTimeout(heightTimer);
@@ -613,4 +579,3 @@
   </script>
 </body>
 </html>
-

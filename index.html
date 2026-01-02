@@ -4,144 +4,315 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Court Service Availability</title>
+
   <style>
-    body { font-family: Arial, sans-serif; margin: 18px; }
-    .row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; align-items:flex-end; }
-    label { display:block; font-size:12px; color:#444; margin-bottom:4px; }
-    select, button { padding:10px; min-width:320px; }
-    button { min-width:140px; cursor:pointer; }
-    .card { border:1px solid #ddd; border-radius:10px; padding:14px; margin-top:14px; }
-    .k { font-weight:600; width:220px; display:inline-block; }
-    .muted { color:#666; }
-    .hidden { display:none; }
-    hr { border:0; border-top:1px solid #eee; margin:14px 0; }
+    /* Global */
+    * { font-family: Arial, sans-serif !important; }
+    body { margin: 0; padding: 0; background: transparent; }
+
+    /* Card container (matches your element.style) */
+    #form-container {
+      width: 100%;
+      max-width: 600px;
+      padding: 30px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-sizing: border-box;
+      margin: 0 auto; /* centers in iframe */
+    }
+
+    /* Header */
+    .main-header {
+      font-size: 18px;
+      margin-top: 5px !important;
+      margin-bottom: 30px;
+      font-weight: 700;
+      color: #111;
+    }
+
+    /* Helper text / disclaimer */
+    .disclaimer, .muted {
+      color: #666;
+      font-size: 12px;
+      font-style: italic;
+      margin-top: 3px;
+      margin-bottom: 18px;
+    }
+
+    /* Form layout */
+    .field {
+      margin-bottom: 22px;
+    }
+
+    #form-container label,
+    #form-container input,
+    #form-container select {
+      width: 100%;
+      box-sizing: border-box;
+      display: block;
+    }
+
+    #form-container label {
+      margin-bottom: 10px;
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #111;
+    }
+
+    /* Dropdowns */
+    #form-container select {
+      padding: 12px 14px;
+      border: 1px solid #d7d7d7;
+      border-radius: 6px;
+      font-size: 16px;
+      background: #fff;
+      line-height: 1.2;
+      outline: none;
+    }
+
+    #form-container select:disabled {
+      background: #f5f5f5;
+      color: #777;
+    }
+
+    #form-container select:focus {
+      border-color: #1e6f97;
+      box-shadow: 0 0 0 3px rgba(30, 111, 151, 0.15);
+    }
+
+    /* Buttons */
+    .button-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    #submit-button, #reset-button {
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      font-size: 16px;
+      border-radius: 5px;
+      transition-duration: 0.4s;
+      width: 100%;
+    }
+
+    #submit-button {
+      background-color: #1e6f97;
+      color: white;
+    }
+
+    #submit-button:disabled {
+      background-color: #9bb9c9;
+      cursor: not-allowed;
+    }
+
+    #submit-button:hover:not(:disabled) {
+      filter: brightness(0.95);
+    }
+
+    #reset-button {
+      background: #e9eef2;
+      color: #1a1a1a;
+    }
+
+    #reset-button:hover {
+      filter: brightness(0.97);
+    }
+
+    /* Results */
+    #results {
+      margin-top: 22px;
+      padding: 18px;
+      border: 1px solid #e6e6e6;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    #results.hidden {
+      display: none;
+    }
+
+    #results h3 {
+      margin: 14px 0 10px 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: #111;
+    }
+
+    #results hr {
+      border: 0;
+      border-top: 1px solid #eee;
+      margin: 14px 0;
+    }
+
+    #results .row {
+      margin: 8px 0;
+      font-size: 14px;
+      color: #111;
+    }
+
+    #results .k {
+      font-weight: 700;
+      display: inline-block;
+      min-width: 210px;
+    }
+
+    /* Small screens */
+    @media (max-width: 520px) {
+      #form-container {
+        padding: 18px;
+        border-radius: 10px;
+      }
+      .button-row {
+        flex-direction: column;
+      }
+      #results .k {
+        min-width: 0;
+        display: block;
+        margin-bottom: 4px;
+      }
+    }
   </style>
 </head>
-<body>
-  <h2>Court Service Availability</h2>
-  <p class="muted">Select a court and location to view availability, service level, and deadlines.</p>
 
-  <div class="row">
-    <div>
+<body>
+  <div id="form-container">
+    <div class="main-header">Court Service Availability</div>
+    <div class="muted">Select a court and location to view availability, service level, and deadlines.</div>
+
+    <div class="field">
       <label for="displayName">Court</label>
       <select id="displayName">
         <option value="">Select a Court…</option>
       </select>
     </div>
 
-    <div>
+    <div class="field">
       <label for="name">Location</label>
       <select id="name" disabled>
         <option value="">Select a Location…</option>
       </select>
     </div>
-  </div>
 
-  <div class="row">
-    <button id="submit" disabled>Submit</button>
-    <button id="reset" type="button">Reset</button>
-  </div>
+    <div class="button-row">
+      <button id="submit-button" disabled>Submit</button>
+      <button id="reset-button" type="button">Reset</button>
+    </div>
 
-  <div id="results" class="card hidden"></div>
+    <div id="results" class="hidden"></div>
+  </div>
 
   <!-- Papa Parse handles CSV correctly (including commas inside quoted fields) -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
   <script>
-  (async function () {
-    const $display = document.getElementById('displayName');
-    const $name    = document.getElementById('name');
-    const $submit  = document.getElementById('submit');
-    const $reset   = document.getElementById('reset');
-    const $results = document.getElementById('results');
+    (async function () {
+      const $display = document.getElementById('displayName');
+      const $name    = document.getElementById('name');
+      const $submit  = document.getElementById('submit-button');
+      const $reset   = document.getElementById('reset-button');
+      const $results = document.getElementById('results');
 
-    const uniq = (arr) => [...new Set(arr)].sort((a,b)=>String(a).localeCompare(String(b)));
-    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    const isOne = (v) => String(v).trim() === "1";
+      const uniq = (arr) => [...new Set(arr)].sort((a, b) => String(a).localeCompare(String(b)));
+      const esc = (s) => String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+      const isOne = (v) => String(v).trim() === "1";
 
-    function resetResults() {
-      $results.classList.add('hidden');
-      $results.innerHTML = '';
-    }
-    function setSubmitEnabled() {
-      $submit.disabled = !($display.value && $name.value);
-    }
-
-    // Load CSV (must be named court-db.csv in the same folder as this file)
-    const csvText = await fetch('court-db.csv', { cache: 'no-store' }).then(r => r.text());
-    const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-    const data = parsed.data;
-
-    // REQUIRED CSV HEADERS (exact):
-    // DisplayName, Name, CanFile, FileServiceLevel, FileDeadline,
-    // CanCourtesyCopy, CCDeliveryServiceLevel, CCDeliveryDeadline
-
-    // Populate DisplayName dropdown
-    uniq(data.map(r => r.DisplayName).filter(Boolean)).forEach(v => {
-      const o = document.createElement('option');
-      o.value = v; o.textContent = v;
-      $display.appendChild(o);
-    });
-
-    $display.addEventListener('change', () => {
-      resetResults();
-      $name.innerHTML = '<option value="">Select a Location…</option>';
-      $name.disabled = !$display.value;
-
-      if ($display.value) {
-        const names = uniq(
-          data.filter(r => r.DisplayName === $display.value).map(r => r.Name).filter(Boolean)
-        );
-        names.forEach(v => {
-          const o = document.createElement('option');
-          o.value = v; o.textContent = v;
-          $name.appendChild(o);
-        });
+      function resetResults() {
+        $results.classList.add('hidden');
+        $results.innerHTML = '';
       }
-      setSubmitEnabled();
-    });
 
-    $name.addEventListener('change', () => {
-      resetResults();
-      setSubmitEnabled();
-    });
+      function setSubmitEnabled() {
+        $submit.disabled = !($display.value && $name.value);
+      }
 
-    $submit.addEventListener('click', () => {
-      const row = data.find(r => r.DisplayName === $display.value && r.Name === $name.value);
-      if (!row) return;
+      // Load CSV (must be named court-db.csv in the same folder as this file)
+      const csvText = await fetch('court-db.csv', { cache: 'no-store' }).then(r => r.text());
+      const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+      const data = parsed.data;
 
-      const canFile = isOne(row.CanFile);
-      const canCC   = isOne(row.CanCourtesyCopy);
+      // REQUIRED CSV HEADERS (exact):
+      // DisplayName, Name, CanFile, FileServiceLevel, FileDeadline,
+      // CanCourtesyCopy, CCDeliveryServiceLevel, CCDeliveryDeadline
 
-      $results.innerHTML = `
-        <div><span class="k">Court:</span> ${esc(row.DisplayName)}</div>
-        <div><span class="k">Location:</span> ${esc(row.Name)}</div>
-        <hr/>
-        <h3>Physical Court Filing</h3>
-        <div><span class="k">Availability:</span> ${canFile ? "Available" : "Not Available"}</div>
-        ${canFile ? `
-          <div><span class="k">Service Level:</span> ${esc(row.FileServiceLevel)}</div>
-          <div><span class="k">Deadline:</span> ${esc(row.FileDeadline)}</div>
-        ` : ""}
-        <hr/>
-        <h3>Courtesy Copy Delivery</h3>
-        <div><span class="k">Availability:</span> ${canCC ? "Available" : "Not Available"}</div>
-        ${canCC ? `
-          <div><span class="k">Service Level:</span> ${esc(row.CCDeliveryServiceLevel)}</div>
-          <div><span class="k">Deadline:</span> ${esc(row.CCDeliveryDeadline)}</div>
-        ` : ""}
-      `;
-      $results.classList.remove('hidden');
-    });
+      // Populate DisplayName dropdown
+      uniq(data.map(r => r.DisplayName).filter(Boolean)).forEach(v => {
+        const o = document.createElement('option');
+        o.value = v;
+        o.textContent = v;
+        $display.appendChild(o);
+      });
 
-    $reset.addEventListener('click', () => {
-      $display.value = "";
-      $name.innerHTML = '<option value="">Select a Location…</option>';
-      $name.disabled = true;
-      $submit.disabled = true;
-      resetResults();
-    });
-  })();
+      $display.addEventListener('change', () => {
+        resetResults();
+        $name.innerHTML = '<option value="">Select a Location…</option>';
+        $name.disabled = !$display.value;
+
+        if ($display.value) {
+          const names = uniq(
+            data
+              .filter(r => r.DisplayName === $display.value)
+              .map(r => r.Name)
+              .filter(Boolean)
+          );
+
+          names.forEach(v => {
+            const o = document.createElement('option');
+            o.value = v;
+            o.textContent = v;
+            $name.appendChild(o);
+          });
+        }
+
+        setSubmitEnabled();
+      });
+
+      $name.addEventListener('change', () => {
+        resetResults();
+        setSubmitEnabled();
+      });
+
+      $submit.addEventListener('click', () => {
+        const row = data.find(r => r.DisplayName === $display.value && r.Name === $name.value);
+        if (!row) return;
+
+        const canFile = isOne(row.CanFile);
+        const canCC   = isOne(row.CanCourtesyCopy);
+
+        $results.innerHTML = `
+          <div class="row"><span class="k">Court:</span> ${esc(row.DisplayName)}</div>
+          <div class="row"><span class="k">Location:</span> ${esc(row.Name)}</div>
+          <hr/>
+          <h3>Physical Court Filing</h3>
+          <div class="row"><span class="k">Availability:</span> ${canFile ? "Available" : "Not Available"}</div>
+          ${canFile ? `
+            <div class="row"><span class="k">Service Level:</span> ${esc(row.FileServiceLevel)}</div>
+            <div class="row"><span class="k">Deadline:</span> ${esc(row.FileDeadline)}</div>
+          ` : ""}
+          <hr/>
+          <h3>Courtesy Copy Delivery</h3>
+          <div class="row"><span class="k">Availability:</span> ${canCC ? "Available" : "Not Available"}</div>
+          ${canCC ? `
+            <div class="row"><span class="k">Service Level:</span> ${esc(row.CCDeliveryServiceLevel)}</div>
+            <div class="row"><span class="k">Deadline:</span> ${esc(row.CCDeliveryDeadline)}</div>
+          ` : ""}
+        `;
+
+        $results.classList.remove('hidden');
+      });
+
+      $reset.addEventListener('click', () => {
+        $display.value = "";
+        $name.innerHTML = '<option value="">Select a Location…</option>';
+        $name.disabled = true;
+        $submit.disabled = true;
+        resetResults();
+      });
+    })();
   </script>
 </body>
 </html>

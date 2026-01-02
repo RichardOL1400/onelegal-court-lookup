@@ -6,29 +6,24 @@
   <title>Court Service Availability</title>
 
   <style>
-    /* Global */
     * { font-family: Arial, sans-serif !important; }
-    html { background: transparent; }
-    body { margin: 0; padding: 0; background: transparent; }
+    html, body { background: transparent; margin: 0; padding: 0; }
 
-    /* Card container */
     #form-container {
       width: 100%;
       max-width: 600px;
       padding: 30px;
       background: #fff;
       border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       box-sizing: border-box;
       margin: 0 auto;
     }
 
-    /* Header */
     .main-header {
       font-size: 18px;
-      margin-top: 5px !important;
-      margin-bottom: 10px;
       font-weight: 700;
+      margin: 5px 0 10px;
       color: #111;
     }
 
@@ -36,79 +31,62 @@
       color: #666;
       font-size: 12px;
       font-style: italic;
-      margin-top: 3px;
       margin-bottom: 18px;
     }
 
-    /* Form layout */
     .field { margin-bottom: 22px; }
 
-    #form-container label,
-    #form-container input,
-    #form-container select {
-      width: 100%;
-      box-sizing: border-box;
+    label {
       display: block;
-    }
-
-    #form-container label {
-      margin-bottom: 10px;
       font-size: 14px;
       font-weight: 600;
+      margin-bottom: 10px;
       color: #111;
     }
 
-    /* Dropdowns */
-    #form-container select {
+    select {
+      width: 100%;
       padding: 12px 14px;
       border: 1px solid #d7d7d7;
       border-radius: 6px;
       font-size: 16px;
-      background: #fff;
-      line-height: 1.2;
-      outline: none;
+      box-sizing: border-box;
     }
 
-    #form-container select:disabled {
+    select:disabled {
       background: #f5f5f5;
       color: #777;
     }
 
-    #form-container select:focus {
+    select:focus {
       border-color: #1e6f97;
-      box-shadow: 0 0 0 3px rgba(30, 111, 151, 0.15);
+      box-shadow: 0 0 0 3px rgba(30,111,151,0.15);
+      outline: none;
     }
 
-    /* Buttons */
     .button-row {
       display: flex;
       gap: 12px;
       margin-top: 10px;
     }
 
-    #submit-button, #reset-button {
+    button {
+      width: 100%;
       padding: 10px;
-      border: none;
-      cursor: pointer;
-      text-align: center;
       font-size: 16px;
       border-radius: 5px;
-      transition-duration: 0.4s;
-      width: 100%;
+      border: none;
+      cursor: pointer;
     }
 
     #submit-button {
-      background-color: #1e6f97;
-      color: white;
+      background: #1e6f97;
+      color: #fff;
     }
 
     #submit-button:disabled {
-      background-color: #9bb9c9;
+      background: #9bb9c9;
       cursor: not-allowed;
-    }
-
-    #submit-button:hover:not(:disabled) {
-      filter: brightness(0.95);
     }
 
     #reset-button {
@@ -116,11 +94,6 @@
       color: #1a1a1a;
     }
 
-    #reset-button:hover {
-      filter: brightness(0.97);
-    }
-
-    /* Info cards (eFiling + results) */
     .info-card {
       margin-top: 18px;
       padding: 18px;
@@ -132,258 +105,213 @@
     .info-card.hidden { display: none; }
 
     .info-card h3 {
-      margin: 0 0 10px 0;
+      margin: 0 0 10px;
       font-size: 16px;
       font-weight: 700;
       color: #111;
     }
 
-    .info-card hr {
-      border: 0;
-      border-top: 1px solid #eee;
-      margin: 14px 0;
-    }
-
-    .info-card .row {
-      margin: 8px 0;
-      font-size: 14px;
-      color: #111;
-    }
-
-    .info-card .k {
-      font-weight: 700;
-      display: inline-block;
-      min-width: 210px;
-    }
-
-    /* Subtle badge for clarity */
     .badge {
-      display: inline-block;
-      margin-left: 8px;
       font-size: 11px;
       padding: 3px 8px;
       border-radius: 999px;
       background: #eef5fb;
       color: #1e6f97;
-      vertical-align: middle;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      margin: 8px 0;
+      font-size: 14px;
+      color: #111;
+      align-items: flex-start;
+    }
+
+    .k {
+      flex: 0 0 210px;
+      max-width: 210px;
       font-weight: 700;
     }
 
+    .v {
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid #eee;
+      margin: 14px 0;
+    }
+
     .note {
-      margin-top: 10px;
       font-size: 12px;
       color: #666;
       font-style: italic;
+      margin-top: 10px;
     }
 
-    /* Small screens */
     @media (max-width: 520px) {
-      #form-container {
-        padding: 18px;
-        border-radius: 10px;
-      }
-      .button-row {
-        flex-direction: column;
-      }
-      .info-card .k {
-        min-width: 0;
-        display: block;
-        margin-bottom: 4px;
-      }
+      .button-row { flex-direction: column; }
+      .row { flex-direction: column; gap: 4px; }
+      .k { max-width: none; }
     }
   </style>
 </head>
 
 <body>
-  <div id="form-container">
-    <div class="main-header">Court Service Availability</div>
-    <div class="muted">Select a court and location to view availability, service level, and deadlines.</div>
+<div id="form-container">
+  <div class="main-header">Court Service Availability</div>
+  <div class="muted">Select a court and location to view service availability and deadlines.</div>
 
-    <div class="field">
-      <label for="displayName">Court</label>
-      <select id="displayName">
-        <option value="">Select a Court…</option>
-      </select>
-    </div>
-
-    <!-- eFiling shows as soon as Court is selected (DisplayName-level) -->
-    <div id="efiling" class="info-card hidden"></div>
-
-    <div class="field" style="margin-top: 18px;">
-      <label for="name">Location</label>
-      <select id="name" disabled>
-        <option value="">Select a Location…</option>
-      </select>
-    </div>
-
-    <div class="button-row">
-      <button id="submit-button" disabled>Submit</button>
-      <button id="reset-button" type="button">Reset</button>
-    </div>
-
-    <!-- Location-specific results (DisplayName + Name) -->
-    <div id="results" class="info-card hidden"></div>
+  <div class="field">
+    <label for="displayName">Court</label>
+    <select id="displayName">
+      <option value="">Select a Court…</option>
+    </select>
   </div>
 
-  <!-- Papa Parse handles CSV correctly (including commas inside quoted fields) -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <div id="efiling" class="info-card hidden"></div>
 
-  <script>
-    (async function () {
-      const $display = document.getElementById('displayName');
-      const $name    = document.getElementById('name');
-      const $submit  = document.getElementById('submit-button');
-      const $reset   = document.getElementById('reset-button');
-      const $efiling = document.getElementById('efiling');
-      const $results = document.getElementById('results');
+  <div class="field">
+    <label for="name">Location</label>
+    <select id="name" disabled>
+      <option value="">Select a Location…</option>
+    </select>
+  </div>
 
-      const uniq = (arr) => [...new Set(arr)].sort((a, b) => String(a).localeCompare(String(b)));
-      const esc = (s) => String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-      const isOne = (v) => String(v).trim() === "1";
+  <div class="button-row">
+    <button id="submit-button" disabled>Submit</button>
+    <button id="reset-button" type="button">Reset</button>
+  </div>
 
-      function hide(el) { el.classList.add('hidden'); el.innerHTML = ''; }
-      function show(el) { el.classList.remove('hidden'); }
+  <div id="results" class="info-card hidden"></div>
+</div>
 
-      function resetResults() {
-        hide($results);
-      }
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
-      function resetEFiling() {
-        hide($efiling);
-      }
+<script>
+(async function () {
+  const $display = document.getElementById('displayName');
+  const $name = document.getElementById('name');
+  const $submit = document.getElementById('submit-button');
+  const $reset = document.getElementById('reset-button');
+  const $efiling = document.getElementById('efiling');
+  const $results = document.getElementById('results');
 
-      function setSubmitEnabled() {
-        $submit.disabled = !($display.value && $name.value);
-      }
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const isOne = v => String(v).trim() === "1";
+  const uniq = arr => [...new Set(arr)].sort((a,b)=>String(a).localeCompare(String(b)));
 
-      function renderEFiling(courtWide) {
-        // courtWide is a row for the selected DisplayName (same values repeated)
-        const canEF = isOne(courtWide.CanEfiling);
+  function formatAddress(r) {
+    const a1 = r.Address_Address1 || "";
+    const city = r.Address_City || "";
+    const state = r.Address_State || "";
+    const zip = r.Address_PostalCode || "";
+    return [a1, [city, state].filter(Boolean).join(", ") + (zip ? " " + zip : "")].filter(Boolean).join(", ");
+  }
 
-        const status = courtWide.EFilingStatus || "";
-        const divisions = courtWide.EFilingDivisions || "";
-        const deadline = courtWide.EFilingDeadline || "";
-        const recommendedBy = courtWide.EFilingRecommendedBy || "";
-        const efm = courtWide.EFM || "";
-        const maxDoc = courtWide.MaxEfileDocSize || "";
-        const maxEnv = courtWide.MaxEfileEnvSize || "";
+  const csv = await fetch('court-db.csv', { cache: 'no-store' }).then(r => r.text());
+  const data = Papa.parse(csv, { header: true, skipEmptyLines: true }).data;
 
-        $efiling.innerHTML = `
-          <h3>eFiling <span class="badge">Court-wide</span></h3>
-          <div class="row"><span class="k">Availability:</span> ${canEF ? "Available" : "Not Available"}</div>
-          ${canEF ? `
-            ${status ? `<div class="row"><span class="k">Status:</span> ${esc(status)}</div>` : ``}
-            ${divisions ? `<div class="row"><span class="k">Divisions:</span> ${esc(divisions)}</div>` : ``}
-            ${deadline ? `<div class="row"><span class="k">Court Deadline:</span> ${esc(deadline)}</div>` : ``}
-            ${recommendedBy ? `<div class="row"><span class="k">Recommended By:</span> Submit through One Legal by at least ${esc(recommendedBy)}</div>` : ``}
-            ${efm ? `<div class="row"><span class="k">EFM:</span> ${esc(efm)}</div>` : ``}
-            ${maxDoc ? `<div class="row"><span class="k">Max Doc Size:</span> ${esc(maxDoc)}</div>` : ``}
-            ${maxEnv ? `<div class="row"><span class="k">Max Envelope Size:</span> ${esc(maxEnv)}</div>` : ``}
-            <div class="note">eFiling details apply to the court overall (not a specific courthouse location).</div>
-          ` : `
-            <div class="note">This court does not currently offer eFiling through One Legal.</div>
-          `}
-        `;
-        show($efiling);
-      }
+  uniq(data.map(r => r.DisplayName).filter(Boolean)).forEach(v => {
+    const o = document.createElement('option');
+    o.value = v;
+    o.textContent = v;
+    $display.appendChild(o);
+  });
 
-      // Load CSV (must be named court-db.csv in the same folder as this file)
-      const csvText = await fetch('court-db.csv', { cache: 'no-store' }).then(r => r.text());
-      const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-      const data = parsed.data;
+  function hide(el){ el.classList.add('hidden'); el.innerHTML=""; }
+  function show(el){ el.classList.remove('hidden'); }
 
-      // REQUIRED CSV HEADERS (exact):
-      // DisplayName, Name,
-      // CanEfiling, EFilingDivisions, EFilingStatus, EFilingDeadline, EFilingRecommendedBy, EFM, MaxEfileDocSize, MaxEfileEnvSize,
-      // CanFile, FileServiceLevel, FileDeadline,
-      // CanCourtesyCopy, CCDeliveryServiceLevel, CCDeliveryDeadline
+  $display.addEventListener('change', () => {
+    hide($results);
+    hide($efiling);
+    $name.innerHTML = '<option value="">Select a Location…</option>';
+    $name.disabled = !$display.value;
+    $submit.disabled = true;
 
-      // Populate Court (DisplayName)
-      uniq(data.map(r => r.DisplayName).filter(Boolean)).forEach(v => {
-        const o = document.createElement('option');
-        o.value = v;
-        o.textContent = v;
-        $display.appendChild(o);
-      });
+    if ($display.value) {
+      const courtWide = data.find(r => r.DisplayName === $display.value) || {};
+      const canEF = isOne(courtWide.CanEfiling);
 
-      $display.addEventListener('change', () => {
-        resetResults();
-        resetEFiling();
+      $efiling.innerHTML = `
+        <h3>eFiling <span class="badge">Court-wide</span></h3>
+        <div class="row"><span class="k">Availability:</span><span class="v">${canEF ? "Available" : "Not Available"}</span></div>
+        ${canEF ? `
+          <div class="row"><span class="k">Status:</span><span class="v">${esc(courtWide.EFilingStatus)}</span></div>
+          <div class="row"><span class="k">Divisions:</span><span class="v">${esc(courtWide.EFilingDivisions)}</span></div>
+          <div class="row"><span class="k">Court Deadline:</span><span class="v">${esc(courtWide.EFilingDeadline)}</span></div>
+          <div class="row"><span class="k">Recommended By:</span><span class="v">Submit through One Legal by at least ${esc(courtWide.EFilingRecommendedBy)}</span></div>
+          <div class="row"><span class="k">EFM:</span><span class="v">${esc(courtWide.EFM)}</span></div>
+          <div class="row"><span class="k">Max Doc Size:</span><span class="v">${esc(courtWide.MaxEfileDocSize)}</span></div>
+          <div class="row"><span class="k">Max Envelope Size:</span><span class="v">${esc(courtWide.MaxEfileEnvSize)}</span></div>
+          <div class="note">eFiling details apply to the court overall.</div>
+        ` : `<div class="note">This court does not currently offer eFiling.</div>`}
+      `;
+      show($efiling);
 
-        // Reset location dropdown
-        $name.innerHTML = '<option value="">Select a Location…</option>';
-        $name.disabled = !$display.value;
+      uniq(data.filter(r => r.DisplayName === $display.value).map(r => r.Name).filter(Boolean))
+        .forEach(v => {
+          const o = document.createElement('option');
+          o.value = v;
+          o.textContent = v;
+          $name.appendChild(o);
+        });
+    }
+  });
 
-        if ($display.value) {
-          // Render eFiling immediately (court-wide)
-          const courtWide = data.find(r => r.DisplayName === $display.value) || {};
-          renderEFiling(courtWide);
+  $name.addEventListener('change', () => {
+    hide($results);
+    $submit.disabled = !($display.value && $name.value);
+  });
 
-          // Populate Locations for the selected court
-          const names = uniq(
-            data
-              .filter(r => r.DisplayName === $display.value)
-              .map(r => r.Name)
-              .filter(Boolean)
-          );
+  $submit.addEventListener('click', () => {
+    const r = data.find(x => x.DisplayName === $display.value && x.Name === $name.value);
+    if (!r) return;
 
-          names.forEach(v => {
-            const o = document.createElement('option');
-            o.value = v;
-            o.textContent = v;
-            $name.appendChild(o);
-          });
-        }
+    const addr = formatAddress(r);
 
-        setSubmitEnabled();
-      });
+    $results.innerHTML = `
+      <h3>Location-specific Services <span class="badge">Courthouse</span></h3>
+      <div class="row"><span class="k">Court:</span><span class="v">${esc(r.DisplayName)}</span></div>
+      <div class="row"><span class="k">Location:</span><span class="v">${esc(r.Name)}</span></div>
+      ${addr ? `<div class="row"><span class="k">Address:</span><span class="v">${esc(addr)}</span></div>` : ``}
 
-      $name.addEventListener('change', () => {
-        resetResults();
-        setSubmitEnabled();
-      });
+      <hr/>
+      <h3>Physical Court Filing</h3>
+      <div class="row"><span class="k">Availability:</span><span class="v">${isOne(r.CanFile) ? "Available" : "Not Available"}</span></div>
+      ${isOne(r.CanFile) ? `
+        <div class="row"><span class="k">Service Level:</span><span class="v">${esc(r.FileServiceLevel)}</span></div>
+        <div class="row"><span class="k">Deadline:</span><span class="v">${esc(r.FileDeadline)}</span></div>
+      ` : ""}
 
-      $submit.addEventListener('click', () => {
-        const row = data.find(r => r.DisplayName === $display.value && r.Name === $name.value);
-        if (!row) return;
+      <hr/>
+      <h3>Courtesy Copy Delivery</h3>
+      <div class="row"><span class="k">Availability:</span><span class="v">${isOne(r.CanCourtesyCopy) ? "Available" : "Not Available"}</span></div>
+      ${isOne(r.CanCourtesyCopy) ? `
+        <div class="row"><span class="k">Service Level:</span><span class="v">${esc(r.CCDeliveryServiceLevel)}</span></div>
+        <div class="row"><span class="k">Deadline:</span><span class="v">${esc(r.CCDeliveryDeadline)}</span></div>
+      ` : ""}
+    `;
+    show($results);
+  });
 
-        const canFile = isOne(row.CanFile);
-        const canCC   = isOne(row.CanCourtesyCopy);
-
-        $results.innerHTML = `
-          <h3>Location-specific Services <span class="badge">Courthouse</span></h3>
-          <div class="row"><span class="k">Court:</span> ${esc(row.DisplayName)}</div>
-          <div class="row"><span class="k">Location:</span> ${esc(row.Name)}</div>
-
-          <hr/>
-          <h3>Physical Court Filing</h3>
-          <div class="row"><span class="k">Availability:</span> ${canFile ? "Available" : "Not Available"}</div>
-          ${canFile ? `
-            <div class="row"><span class="k">Service Level:</span> ${esc(row.FileServiceLevel)}</div>
-            <div class="row"><span class="k">Deadline:</span> ${esc(row.FileDeadline)}</div>
-          ` : ""}
-
-          <hr/>
-          <h3>Courtesy Copy Delivery</h3>
-          <div class="row"><span class="k">Availability:</span> ${canCC ? "Available" : "Not Available"}</div>
-          ${canCC ? `
-            <div class="row"><span class="k">Service Level:</span> ${esc(row.CCDeliveryServiceLevel)}</div>
-            <div class="row"><span class="k">Deadline:</span> ${esc(row.CCDeliveryDeadline)}</div>
-          ` : ""}
-        `;
-
-        show($results);
-      });
-
-      $reset.addEventListener('click', () => {
-        $display.value = "";
-        $name.innerHTML = '<option value="">Select a Location…</option>';
-        $name.disabled = true;
-        $submit.disabled = true;
-        resetEFiling();
-        resetResults();
-      });
-    })();
-  </script>
+  $reset.addEventListener('click', () => {
+    $display.value = "";
+    $name.innerHTML = '<option value="">Select a Location…</option>';
+    $name.disabled = true;
+    $submit.disabled = true;
+    hide($efiling);
+    hide($results);
+  });
+})();
+</script>
 </body>
 </html>

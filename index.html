@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Court Service Availability</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 18px; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; align-items:flex-end; }
+    label { display:block; font-size:12px; color:#444; margin-bottom:4px; }
+    select, button { padding:10px; min-width:320px; }
+    button { min-width:140px; cursor:pointer; }
+    .card { border:1px solid #ddd; border-radius:10px; padding:14px; margin-top:14px; }
+    .k { font-weight:600; width:220px; display:inline-block; }
+    .muted { color:#666; }
+    .hidden { display:none; }
+    hr { border:0; border-top:1px solid #eee; margin:14px 0; }
+  </style>
+</head>
+<body>
+  <h2>Court Service Availability</h2>
+  <p class="muted">Select a court and location to view availability, service level, and deadlines.</p>
+
+  <div class="row">
+    <div>
+      <label for="displayName">Court</label>
+      <select id="displayName">
+        <option value="">Select a Court…</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="name">Location</label>
+      <select id="name" disabled>
+        <option value="">Select a Location…</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" type="button">Reset</button>
+  </div>
+
+  <div id="results" class="card hidden"></div>
+
+  <!-- Papa Parse handles CSV correctly (including commas inside quoted fields) -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <script>
+  (async function () {
+    const $display = document.getElementById('displayName');
+    const $name    = document.getElementById('name');
+    const $submit  = document.getElementById('submit');
+    const $reset   = document.getElementById('reset');
+    const $results = document.getElementById('results');
+
+    const uniq = (arr) => [...new Set(arr)].sort((a,b)=>String(a).localeCompare(String(b)));
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    const isOne = (v) => String(v).trim() === "1";
+
+    function resetResults() {
+      $results.classList.add('hidden');
+      $results.innerHTML = '';
+    }
+    function setSubmitEnabled() {
+      $submit.disabled = !($display.value && $name.value);
+    }
+
+    // Load CSV (must be named court-db.csv in the same folder as this file)
+    const csvText = await fetch('court-db.csv', { cache: 'no-store' }).then(r => r.text());
+    const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+    const data = parsed.data;
+
+    // REQUIRED CSV HEADERS (exact):
+    // DisplayName, Name, CanFile, FileServiceLevel, FileDeadline,
+    // CanCourtesyCopy, CCDeliveryServiceLevel, CCDeliveryDeadline
+
+    // Populate DisplayName dropdown
+    uniq(data.map(r => r.DisplayName).filter(Boolean)).forEach(v => {
+      const o = document.createElement('option');
+      o.value = v; o.textContent = v;
+      $display.appendChild(o);
+    });
+
+    $display.addEventListener('change', () => {
+      resetResults();
+      $name.innerHTML = '<option value="">Select a Location…</option>';
+      $name.disabled = !$display.value;
+
+      if ($display.value) {
+        const names = uniq(
+          data.filter(r => r.DisplayName === $display.value).map(r => r.Name).filter(Boolean)
+        );
+        names.forEach(v => {
+          const o = document.createElement('option');
+          o.value = v; o.textContent = v;
+          $name.appendChild(o);
+        });
+      }
+      setSubmitEnabled();
+    });
+
+    $name.addEventListener('change', () => {
+      resetResults();
+      setSubmitEnabled();
+    });
+
+    $submit.addEventListener('click', () => {
+      const row = data.find(r => r.DisplayName === $display.value && r.Name === $name.value);
+      if (!row) return;
+
+      const canFile = isOne(row.CanFile);
+      const canCC   = isOne(row.CanCourtesyCopy);
+
+      $results.innerHTML = `
+        <div><span class="k">Court:</span> ${esc(row.DisplayName)}</div>
+        <div><span class="k">Location:</span> ${esc(row.Name)}</div>
+        <hr/>
+        <h3>Physical Court Filing</h3>
+        <div><span class="k">Availability:</span> ${canFile ? "Available" : "Not Available"}</div>
+        ${canFile ? `
+          <div><span class="k">Service Level:</span> ${esc(row.FileServiceLevel)}</div>
+          <div><span class="k">Deadline:</span> ${esc(row.FileDeadline)}</div>
+        ` : ""}
+        <hr/>
+        <h3>Courtesy Copy Delivery</h3>
+        <div><span class="k">Availability:</span> ${canCC ? "Available" : "Not Available"}</div>
+        ${canCC ? `
+          <div><span class="k">Service Level:</span> ${esc(row.CCDeliveryServiceLevel)}</div>
+          <div><span class="k">Deadline:</span> ${esc(row.CCDeliveryDeadline)}</div>
+        ` : ""}
+      `;
+      $results.classList.remove('hidden');
+    });
+
+    $reset.addEventListener('click', () => {
+      $display.value = "";
+      $name.innerHTML = '<option value="">Select a Location…</option>';
+      $name.disabled = true;
+      $submit.disabled = true;
+      resetResults();
+    });
+  })();
+  </script>
+</body>
+</html>

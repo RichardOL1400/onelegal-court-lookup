@@ -11,7 +11,7 @@
   <style>
     * { box-sizing: border-box; }
     html, body { background: transparent; margin: 0; padding: 0; }
-    
+
     body {
       font-family: "IBM Plex Sans", sans-serif;
       font-size: 14px;
@@ -24,11 +24,11 @@
       padding: 30px;
       background: #fff;
       border-radius: 10px;
-      border: 1px solid rgba(0,0,0,0.06);    
-      box-shadow: 0 10px 25px rgba(0,0,0,0.10); 
-      background-clip: padding-box;            
-      position: relative;                    
-      overflow: visible;                     
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+      background-clip: padding-box;
+      position: relative;
+      overflow: visible;
       margin: 0 auto;
     }
 
@@ -68,7 +68,7 @@
       gap: 16px;
       margin-bottom: 8px;
     }
-    
+
     @media (max-width: 720px) {
       .grid { grid-template-columns: 1fr; }
     }
@@ -112,6 +112,7 @@
       font-size: 14px;
       line-height: 1.5;
       background: transparent;
+      cursor: pointer;
     }
 
     .combobox input:disabled {
@@ -121,6 +122,7 @@
 
     .combobox input:focus {
       outline: none;
+      cursor: text;
     }
 
     .combobox:focus-within:not(.disabled) {
@@ -252,31 +254,31 @@
       border: 1px solid transparent;
       white-space: nowrap;
     }
-    
+
     .pill .dot {
-      width: 8px; 
-      height: 8px; 
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: currentColor;
       opacity: 0.9;
     }
-    
-    .pill.available { 
-      color: #0f6b2f; 
-      background: #e8f6ee; 
-      border-color: #cdebd8; 
+
+    .pill.available {
+      color: #0f6b2f;
+      background: #e8f6ee;
+      border-color: #cdebd8;
     }
-    
-    .pill.unavailable { 
-      color: #9b1c1c; 
-      background: #fdeaea; 
-      border-color: #f7c8c8; 
+
+    .pill.unavailable {
+      color: #9b1c1c;
+      background: #fdeaea;
+      border-color: #f7c8c8;
     }
-    
-    .pill.info { 
-      color: #0f4f6b; 
-      background: #eef5fb; 
-      border-color: #d8e5ee; 
+
+    .pill.info {
+      color: #0f4f6b;
+      background: #eef5fb;
+      border-color: #d8e5ee;
     }
 
     /* Rows */
@@ -287,18 +289,19 @@
       font-size: 14px;
       align-items: flex-start;
     }
-    
+
     .k {
       flex: 0 0 180px;
       font-weight: 600;
       color: #444;
     }
-    
+
     .v {
       flex: 1;
       color: #1a1a1a;
-      word-break: break-word;
+      white-space: normal;
       overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     hr {
@@ -315,7 +318,7 @@
       border: 1px solid rgba(30,111,151,0.20);
       margin-top: 12px;
     }
-    
+
     .deadline-box .label {
       font-size: 12px;
       font-weight: 700;
@@ -324,7 +327,7 @@
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
-    
+
     .deadline-box .time {
       font-size: 24px;
       font-weight: 700;
@@ -332,7 +335,7 @@
       color: #0f2f3f;
       margin-bottom: 6px;
     }
-    
+
     .deadline-box .hint {
       font-size: 12px;
       color: #6b6b6b;
@@ -353,13 +356,13 @@
       cursor: pointer;
       margin-top: 12px;
     }
-    
-    .toggle:hover { 
-      filter: brightness(0.98); 
+
+    .toggle:hover {
+      filter: brightness(0.98);
     }
-    
-    .details.hidden { 
-      display: none; 
+
+    .details.hidden {
+      display: none;
     }
 
     /* Summary */
@@ -370,11 +373,11 @@
       background: #f7fbfe;
       border: 1px solid #d8e5ee;
     }
-    
-    .availability-summary.hidden { 
-      display: none; 
+
+    .availability-summary.hidden {
+      display: none;
     }
-    
+
     .availability-summary h3 {
       margin: 0 0 12px;
       font-size: 16px;
@@ -408,9 +411,9 @@
       color: #555;
       line-height: 1.5;
     }
-    
-    .prompt.hidden { 
-      display: none; 
+
+    .prompt.hidden {
+      display: none;
     }
 
     /* Confirmation */
@@ -424,9 +427,9 @@
       color: #0f4f6b;
       line-height: 1.5;
     }
-    
-    .confirmation.hidden { 
-      display: none; 
+
+    .confirmation.hidden {
+      display: none;
     }
 
     /* Footer */
@@ -438,7 +441,7 @@
       font-size: 12px;
       line-height: 1.4;
     }
-    
+
     .footer div {
       margin-bottom: 6px;
     }
@@ -461,7 +464,7 @@
           <input
             id="court-combobox"
             type="text"
-            placeholder="Select a Court…"
+            placeholder="Select…"
             aria-autocomplete="list"
             aria-controls="court-listbox"
             aria-activedescendant=""
@@ -479,9 +482,7 @@
           class="listbox"
           role="listbox"
           hidden
-        >
-          <!-- populated dynamically -->
-        </ul>
+        ></ul>
       </div>
 
       <div class="field">
@@ -491,7 +492,7 @@
           <input
             id="courthouse-combobox"
             type="text"
-            placeholder="Select a courthouse location…"
+            placeholder="Select…"
             aria-autocomplete="list"
             aria-controls="courthouse-listbox"
             aria-activedescendant=""
@@ -512,9 +513,7 @@
           class="listbox"
           role="listbox"
           hidden
-        >
-          <!-- populated dynamically -->
-        </ul>
+        ></ul>
       </div>
     </div>
 
@@ -548,9 +547,11 @@
     const $courtInput = document.getElementById('court-combobox');
     const $courtWrapper = $courtInput.parentElement;
     const $courtListbox = document.getElementById('court-listbox');
+
     const $comboboxInput = document.getElementById('courthouse-combobox');
     const $comboboxWrapper = $comboboxInput.parentElement;
     const $listbox = document.getElementById('courthouse-listbox');
+
     const $reset = document.getElementById('reset-button');
     const $summary = document.getElementById('summary');
     const $efiling = document.getElementById('efiling');
@@ -570,28 +571,6 @@
     const esc = s => String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
     const isOne = v => String(v).trim() === "1";
     const uniq = arr => [...new Set(arr)].sort((a,b)=>String(a).localeCompare(String(b)));
-
-    // --- NEW: robust normalization + URL param extraction (fixes commas/encoding/spacing) ---
-    function norm(s) {
-      return String(s ?? "")
-        .replace(/\u00A0/g, " ")        // non-breaking spaces
-        .replace(/\s+/g, " ")
-        .trim()
-        .toLowerCase();
-    }
-
-    function getCourtFromUrl() {
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const raw = params.get("court") || "";
-        if (!raw) return "";
-        // URLSearchParams normally decodes, but we force decode to remove any ambiguity.
-        return decodeURIComponent(raw).trim();
-      } catch (e) {
-        return "";
-      }
-    }
-    // -------------------------------------------------------------------------------
 
     function hide(el){ el.classList.add('hidden'); }
     function show(el){ el.classList.remove('hidden'); }
@@ -635,16 +614,6 @@
       const canEF = isOne(courtWide.CanEfiling);
       const canFile = locationData ? isOne(locationData.CanFile) : null;
       const canCC = locationData ? isOne(locationData.CanCourtesyCopy) : null;
-      
-      const efilingDeadline = (courtWide.EFilingDeadline || "11:59 PM").trim();
-      const fileDeadline = locationData ? (locationData.FileDeadline || "").trim() : "";
-      const ccDeadline = locationData ? (locationData.CCDeliveryDeadline || "").trim() : "";
-
-      let mostRelevantDeadline = efilingDeadline;
-      if (locationData) {
-        if (canFile && fileDeadline) mostRelevantDeadline = fileDeadline;
-        else if (canCC && ccDeadline) mostRelevantDeadline = ccDeadline;
-      }
 
       $summary.innerHTML = `
         <h3>Availability Summary</h3>
@@ -665,12 +634,12 @@
           ` : ''}
         </div>
       `;
-      
+
       show($summary);
       sendHeightSoon();
     }
 
-    function renderEFiling(courtWide, courtName) {
+    function renderEFiling(courtWide) {
       const canEF = isOne(courtWide.CanEfiling);
       const status = (courtWide.EFilingStatus || "").trim();
       const divisions = (courtWide.EFilingDivisions || "").trim();
@@ -781,16 +750,16 @@
 
       show($results);
       hide($physicalPrompt);
-      
+
       renderSummary(courtWide, locationData);
-      
+
       sendHeightSoon();
     }
 
-    // Combobox logic
+    // Combobox logic (courthouse)
     function populateListbox(locations) {
       $listbox.innerHTML = "";
-      
+
       if (locations.length === 0) {
         const empty = document.createElement('li');
         empty.className = 'listbox-empty';
@@ -814,7 +783,6 @@
         groupHeader.textContent = county;
         $listbox.appendChild(groupHeader);
 
-        // Sort locations alphabetically within each county
         grouped[county].sort((a, b) => a.Name.localeCompare(b.Name)).forEach(loc => {
           const option = document.createElement('li');
           option.className = 'listbox-option';
@@ -822,20 +790,21 @@
           option.setAttribute('tabindex', '-1');
           option.setAttribute('data-court-id', loc.CourtId);
           option.textContent = loc.Name;
-          
+
           option.addEventListener('mousedown', (e) => {
-            e.preventDefault(); // Prevent focus loss
+            e.preventDefault();
             selectLocation(loc);
           });
-          
+
           $listbox.appendChild(option);
         });
       });
     }
 
     function filterOptions(query) {
-      const filtered = allLocations.filter(loc => 
-        loc.Name.toLowerCase().startsWith(query.toLowerCase())
+      const q = (query || "").toLowerCase();
+      const filtered = allLocations.filter(loc =>
+        (loc.Name || "").toLowerCase().includes(q)
       );
       populateListbox(filtered);
     }
@@ -856,51 +825,48 @@
     function selectLocation(locationData) {
       selectedLocation = locationData;
       $comboboxInput.value = locationData.Name;
+      currentLocationInputValue = locationData.Name;
       closeListbox();
-      
+
       const courtWide = data.find(r => r.DisplayName === currentCourtName) || {};
       renderLocationServices(locationData, courtWide);
     }
 
-    // Event listeners
+    // Courthouse events (Option A behavior)
     $comboboxInput.addEventListener('input', () => {
       const query = $comboboxInput.value;
       filterOptions(query);
-      if (!isListboxOpen) {
-        openListbox();
-      }
+      if (!isListboxOpen) openListbox();
     });
 
     $comboboxInput.addEventListener('click', () => {
-      if (!$comboboxInput.disabled && allLocations.length > 0) {
-        if (isListboxOpen) {
-          closeListbox();
-        } else {
-          // Save current value before clearing
-          currentLocationInputValue = $comboboxInput.value;
-          // Clear input to show full list when reopening
-          $comboboxInput.value = "";
-          filterOptions("");
-          openListbox();
-        }
+      if ($comboboxInput.disabled || allLocations.length === 0) return;
+
+      if (isListboxOpen) {
+        closeListbox();
+      } else {
+        currentLocationInputValue = $comboboxInput.value;
+        filterOptions($comboboxInput.value || "");
+        openListbox();
+        $comboboxInput.select();
       }
     });
 
     $comboboxInput.addEventListener('focus', () => {
-      if (!$comboboxInput.disabled && allLocations.length > 0 && !isListboxOpen) {
-        // Save current value before clearing
+      if ($comboboxInput.disabled || allLocations.length === 0) return;
+
+      if (!isListboxOpen) {
         currentLocationInputValue = $comboboxInput.value;
-        // Clear input to show full list when focusing
-        $comboboxInput.value = "";
-        filterOptions("");
+        filterOptions($comboboxInput.value || "");
         openListbox();
+        $comboboxInput.select();
       }
     });
 
     $comboboxInput.addEventListener('blur', () => {
-      // Delay to allow click on option to register
       setTimeout(() => {
         if (!isListboxOpen) return;
+
         // Restore previous value if no new selection was made
         if (selectedLocation && $comboboxInput.value !== selectedLocation.Name) {
           $comboboxInput.value = currentLocationInputValue;
@@ -915,10 +881,10 @@
 
     /* ---------- Populate courts ---------- */
     allCourts = uniq(data.map(r => r.DisplayName).filter(Boolean));
-    
+
     function populateCourtListbox(courts = allCourts) {
       $courtListbox.innerHTML = "";
-      
+
       if (courts.length === 0) {
         const empty = document.createElement('li');
         empty.className = 'listbox-empty';
@@ -927,26 +893,27 @@
         $courtListbox.appendChild(empty);
         return;
       }
-      
+
       courts.forEach(courtName => {
         const option = document.createElement('li');
         option.className = 'listbox-option';
         option.setAttribute('role', 'option');
         option.setAttribute('tabindex', '-1');
         option.textContent = courtName;
-        
+
         option.addEventListener('mousedown', (e) => {
           e.preventDefault();
           selectCourt(courtName);
         });
-        
+
         $courtListbox.appendChild(option);
       });
     }
 
     function filterCourts(query) {
-      const filtered = allCourts.filter(court => 
-        court.toLowerCase().startsWith(query.toLowerCase())
+      const q = (query || "").toLowerCase();
+      const filtered = allCourts.filter(court =>
+        String(court).toLowerCase().includes(q)
       );
       populateCourtListbox(filtered);
     }
@@ -966,13 +933,15 @@
     function selectCourt(courtName) {
       currentCourtName = courtName;
       $courtInput.value = courtName;
+      currentCourtInputValue = courtName;
       closeCourtListbox();
-      
+
       // Reset courthouse
       $comboboxInput.value = "";
       $comboboxInput.disabled = false;
       $comboboxWrapper.classList.remove('disabled');
       selectedLocation = null;
+      currentLocationInputValue = "";
       $listbox.innerHTML = "";
       closeListbox();
 
@@ -981,52 +950,47 @@
       hide($summary);
       hide($confirmation);
 
-      const courtWide = data.find(r => norm(r.DisplayName) === norm(courtName)) || {};
-      
-      renderEFiling(courtWide, courtName);
+      const courtWide = data.find(r => r.DisplayName === courtName) || {};
+      renderEFiling(courtWide);
       renderSummary(courtWide, null);
 
-      allLocations = data.filter(r => norm(r.DisplayName) === norm(courtName));
+      allLocations = data.filter(r => r.DisplayName === courtName);
 
       renderPhysicalPrompt();
+      sendHeightSoon();
     }
 
-    // Court combobox events
+    // Court combobox events (Option A behavior)
     $courtInput.addEventListener('input', () => {
       const query = $courtInput.value;
       filterCourts(query);
-      if (!isCourtListboxOpen) {
-        openCourtListbox();
-      }
+      if (!isCourtListboxOpen) openCourtListbox();
     });
 
     $courtInput.addEventListener('click', () => {
       if (isCourtListboxOpen) {
         closeCourtListbox();
       } else {
-        // Save current value before clearing
         currentCourtInputValue = $courtInput.value;
-        // Clear input to show full list when reopening
-        $courtInput.value = "";
-        filterCourts("");
+        filterCourts($courtInput.value || "");
         openCourtListbox();
+        $courtInput.select();
       }
     });
 
     $courtInput.addEventListener('focus', () => {
       if (!isCourtListboxOpen) {
-        // Save current value before clearing
         currentCourtInputValue = $courtInput.value;
-        // Clear input to show full list when focusing
-        $courtInput.value = "";
-        filterCourts("");
+        filterCourts($courtInput.value || "");
         openCourtListbox();
+        $courtInput.select();
       }
     });
 
     $courtInput.addEventListener('blur', () => {
       setTimeout(() => {
         if (!isCourtListboxOpen) return;
+
         // Restore previous value if no new selection was made
         if ($courtInput.value !== currentCourtName) {
           $courtInput.value = currentCourtInputValue;
@@ -1038,17 +1002,19 @@
     /* ---------- Reset ---------- */
     $reset.addEventListener('click', () => {
       $courtInput.value = "";
+      currentCourtInputValue = "";
+      currentCourtName = "";
       closeCourtListbox();
-      
+
       $comboboxInput.value = "";
       $comboboxInput.disabled = true;
       $comboboxWrapper.classList.add('disabled');
       selectedLocation = null;
-      currentCourtName = "";
+      currentLocationInputValue = "";
       allLocations = [];
       $listbox.innerHTML = "";
       closeListbox();
-      
+
       hide($efiling);
       hide($results);
       hide($physicalPrompt);
@@ -1073,28 +1039,7 @@
     window.addEventListener("resize", sendHeightSoon);
     const observer = new MutationObserver(sendHeightSoon);
     observer.observe(document.body, { childList: true, subtree: true });
-
-    // --- NEW: Auto-select court from URL param (court=...) using normalized match ---
-    // Runs after courts are loaded.
-    (function autoSelectCourtFromUrl() {
-      const courtFromUrl = getCourtFromUrl();
-      if (!courtFromUrl) return;
-
-      // Find best match among courts (normalized)
-      const target = norm(courtFromUrl);
-      const match = allCourts.find(c => norm(c) === target);
-
-      if (match) {
-        selectCourt(match);
-        // Ensure the input shows the selected court (in case focus/click handlers cleared it)
-        $courtInput.value = match;
-        closeCourtListbox();
-        sendHeightSoon();
-      }
-    })();
-    // ---------------------------------------------------------------------------
   })();
   </script>
 </body>
 </html>
-

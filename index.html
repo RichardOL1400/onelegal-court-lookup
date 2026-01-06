@@ -112,17 +112,11 @@
       font-size: 14px;
       line-height: 1.5;
       background: transparent;
-      cursor: pointer;
     }
 
     .combobox input:disabled {
       color: #9a9a9a;
       cursor: not-allowed;
-    }
-
-    .combobox input:focus {
-      outline: none;
-      cursor: text;
     }
 
     .combobox:focus-within:not(.disabled) {
@@ -162,9 +156,7 @@
       margin-left: 0;
     }
 
-    .listbox[hidden] {
-      display: none;
-    }
+    .listbox[hidden] { display: none; }
 
     .listbox-group {
       padding: 12px 14px 6px;
@@ -204,15 +196,10 @@
       padding: 0;
       text-decoration: underline;
     }
-
-    .reset-link:hover {
-      color: #2d5ab8;
-    }
+    .reset-link:hover { color: #2d5ab8; }
 
     /* Sections and Cards */
-    .section {
-      margin-top: 24px;
-    }
+    .section { margin-top: 24px; }
 
     .card {
       padding: 16px;
@@ -221,13 +208,8 @@
       background: #fff;
     }
 
-    .card + .card {
-      margin-top: 16px;
-    }
-
-    .card.hidden {
-      display: none;
-    }
+    .card + .card { margin-top: 16px; }
+    .card.hidden { display: none; }
 
     .card-title h2 {
       margin: 0 0 4px;
@@ -254,27 +236,16 @@
       border: 1px solid transparent;
       white-space: nowrap;
     }
-
-    .pill .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: currentColor;
-      opacity: 0.9;
-    }
-
     .pill.available {
       color: #0f6b2f;
       background: #e8f6ee;
       border-color: #cdebd8;
     }
-
     .pill.unavailable {
       color: #9b1c1c;
       background: #fdeaea;
       border-color: #f7c8c8;
     }
-
     .pill.info {
       color: #0f4f6b;
       background: #eef5fb;
@@ -356,14 +327,8 @@
       cursor: pointer;
       margin-top: 12px;
     }
-
-    .toggle:hover {
-      filter: brightness(0.98);
-    }
-
-    .details.hidden {
-      display: none;
-    }
+    .toggle:hover { filter: brightness(0.98); }
+    .details.hidden { display: none; }
 
     /* Summary */
     .availability-summary {
@@ -373,21 +338,14 @@
       background: #f7fbfe;
       border: 1px solid #d8e5ee;
     }
-
-    .availability-summary.hidden {
-      display: none;
-    }
-
+    .availability-summary.hidden { display: none; }
     .availability-summary h3 {
       margin: 0 0 12px;
       font-size: 16px;
       font-weight: 600;
     }
 
-    .summary-grid {
-      display: grid;
-      gap: 12px;
-    }
+    .summary-grid { display: grid; gap: 12px; }
 
     .summary-item {
       display: flex;
@@ -396,9 +354,7 @@
       font-size: 14px;
     }
 
-    .summary-label {
-      font-weight: 600;
-    }
+    .summary-label { font-weight: 600; }
 
     /* Prompt */
     .prompt {
@@ -411,10 +367,7 @@
       color: #555;
       line-height: 1.5;
     }
-
-    .prompt.hidden {
-      display: none;
-    }
+    .prompt.hidden { display: none; }
 
     /* Confirmation */
     .confirmation {
@@ -427,10 +380,7 @@
       color: #0f4f6b;
       line-height: 1.5;
     }
-
-    .confirmation.hidden {
-      display: none;
-    }
+    .confirmation.hidden { display: none; }
 
     /* Footer */
     .footer {
@@ -441,10 +391,7 @@
       font-size: 12px;
       line-height: 1.4;
     }
-
-    .footer div {
-      margin-bottom: 6px;
-    }
+    .footer div { margin-bottom: 6px; }
   </style>
 </head>
 
@@ -464,25 +411,17 @@
           <input
             id="court-combobox"
             type="text"
-            placeholder="Select…"
+            placeholder="Select a Court…"
             aria-autocomplete="list"
             aria-controls="court-listbox"
             aria-activedescendant=""
           />
-
-          <button class="combobox-chevron" tabindex="-1" aria-hidden="true">
-            ▾
-          </button>
+          <button class="combobox-chevron" tabindex="-1" aria-hidden="true">▾</button>
         </div>
 
         <div class="helper-text">Determines eFiling availability.</div>
 
-        <ul
-          id="court-listbox"
-          class="listbox"
-          role="listbox"
-          hidden
-        ></ul>
+        <ul id="court-listbox" class="listbox" role="listbox" hidden></ul>
       </div>
 
       <div class="field">
@@ -492,28 +431,20 @@
           <input
             id="courthouse-combobox"
             type="text"
-            placeholder="Select…"
+            placeholder="Select a courthouse location…"
             aria-autocomplete="list"
             aria-controls="courthouse-listbox"
             aria-activedescendant=""
             disabled
           />
-
-          <button class="combobox-chevron" tabindex="-1" aria-hidden="true">
-            ▾
-          </button>
+          <button class="combobox-chevron" tabindex="-1" aria-hidden="true">▾</button>
         </div>
 
         <div id="courthouse-helper" class="helper-text">
           Determines physical filing and courtesy copy deadlines.
         </div>
 
-        <ul
-          id="courthouse-listbox"
-          class="listbox"
-          role="listbox"
-          hidden
-        ></ul>
+        <ul id="courthouse-listbox" class="listbox" role="listbox" hidden></ul>
       </div>
     </div>
 
@@ -756,7 +687,7 @@
       sendHeightSoon();
     }
 
-    // Combobox logic (courthouse)
+    // ---------- Courthouse combobox logic ----------
     function populateListbox(locations) {
       $listbox.innerHTML = "";
 
@@ -783,29 +714,32 @@
         groupHeader.textContent = county;
         $listbox.appendChild(groupHeader);
 
-        grouped[county].sort((a, b) => a.Name.localeCompare(b.Name)).forEach(loc => {
-          const option = document.createElement('li');
-          option.className = 'listbox-option';
-          option.setAttribute('role', 'option');
-          option.setAttribute('tabindex', '-1');
-          option.setAttribute('data-court-id', loc.CourtId);
-          option.textContent = loc.Name;
+        grouped[county]
+          .sort((a, b) => a.Name.localeCompare(b.Name))
+          .forEach(loc => {
+            const option = document.createElement('li');
+            option.className = 'listbox-option';
+            option.setAttribute('role', 'option');
+            option.setAttribute('tabindex', '-1');
+            option.setAttribute('data-court-id', loc.CourtId);
+            option.textContent = loc.Name;
 
-          option.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            selectLocation(loc);
+            option.addEventListener('mousedown', (e) => {
+              e.preventDefault();
+              selectLocation(loc);
+            });
+
+            $listbox.appendChild(option);
           });
-
-          $listbox.appendChild(option);
-        });
       });
     }
 
     function filterOptions(query) {
-      const q = (query || "").toLowerCase();
-      const filtered = allLocations.filter(loc =>
-        (loc.Name || "").toLowerCase().includes(q)
-      );
+      const q = (query || "").toLowerCase().trim();
+      const filtered = allLocations.filter(loc => {
+        const name = (loc.Name || "").toLowerCase();
+        return !q || name.includes(q);   // <-- searchable (contains), not just startsWith
+      });
       populateListbox(filtered);
     }
 
@@ -825,14 +759,13 @@
     function selectLocation(locationData) {
       selectedLocation = locationData;
       $comboboxInput.value = locationData.Name;
-      currentLocationInputValue = locationData.Name;
       closeListbox();
 
       const courtWide = data.find(r => r.DisplayName === currentCourtName) || {};
       renderLocationServices(locationData, courtWide);
     }
 
-    // Courthouse events (Option A behavior)
+    // Courthouse combobox events
     $comboboxInput.addEventListener('input', () => {
       const query = $comboboxInput.value;
       filterOptions(query);
@@ -846,28 +779,25 @@
         closeListbox();
       } else {
         currentLocationInputValue = $comboboxInput.value;
-        filterOptions($comboboxInput.value || "");
+        $comboboxInput.value = "";
+        filterOptions("");
         openListbox();
-        $comboboxInput.select();
       }
     });
 
     $comboboxInput.addEventListener('focus', () => {
       if ($comboboxInput.disabled || allLocations.length === 0) return;
-
       if (!isListboxOpen) {
         currentLocationInputValue = $comboboxInput.value;
-        filterOptions($comboboxInput.value || "");
+        $comboboxInput.value = "";
+        filterOptions("");
         openListbox();
-        $comboboxInput.select();
       }
     });
 
     $comboboxInput.addEventListener('blur', () => {
       setTimeout(() => {
         if (!isListboxOpen) return;
-
-        // Restore previous value if no new selection was made
         if (selectedLocation && $comboboxInput.value !== selectedLocation.Name) {
           $comboboxInput.value = currentLocationInputValue;
         }
@@ -911,10 +841,11 @@
     }
 
     function filterCourts(query) {
-      const q = (query || "").toLowerCase();
-      const filtered = allCourts.filter(court =>
-        String(court).toLowerCase().includes(q)
-      );
+      const q = (query || "").toLowerCase().trim();
+      const filtered = allCourts.filter(court => {
+        const name = (court || "").toLowerCase();
+        return !q || name.includes(q);   // <-- searchable (contains), not just startsWith
+      });
       populateCourtListbox(filtered);
     }
 
@@ -933,7 +864,6 @@
     function selectCourt(courtName) {
       currentCourtName = courtName;
       $courtInput.value = courtName;
-      currentCourtInputValue = courtName;
       closeCourtListbox();
 
       // Reset courthouse
@@ -941,7 +871,6 @@
       $comboboxInput.disabled = false;
       $comboboxWrapper.classList.remove('disabled');
       selectedLocation = null;
-      currentLocationInputValue = "";
       $listbox.innerHTML = "";
       closeListbox();
 
@@ -951,128 +880,39 @@
       hide($confirmation);
 
       const courtWide = data.find(r => r.DisplayName === courtName) || {};
+
       renderEFiling(courtWide);
       renderSummary(courtWide, null);
 
       allLocations = data.filter(r => r.DisplayName === courtName);
+      // Prebuild full list for location dropdown
+      filterOptions("");
 
       renderPhysicalPrompt();
       sendHeightSoon();
     }
 
-    <script>
-(function () {
-  function getCourtFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("court"); // already decoded
-  }
-
-  function sendCourtToIframe(courtName) {
-    const frame = document.getElementById("courtLookupFrame");
-    if (!frame || !frame.contentWindow) return;
-
-    frame.contentWindow.postMessage(
-      { type: "onelegal_set_court", court: courtName },
-      "*" // You can lock this down to the GH Pages origin later if you want
-    );
-  }
-
-  const court = getCourtFromUrl();
-  if (!court) return;
-
-  // Send once iframe loads, then again shortly after (covers slow load)
-  const frame = document.getElementById("courtLookupFrame");
-  if (frame) {
-    frame.addEventListener("load", function () {
-      sendCourtToIframe(court);
-      setTimeout(() => sendCourtToIframe(court), 250);
-      setTimeout(() => sendCourtToIframe(court), 1000);
-    });
-  }
-})();
-</script>
-
-
-    // Court combobox events (Option A behavior)
-    $courtInput.addEventListener('input', () => {
-      const query = $courtInput.value;
-      filterCourts(query);
-      if (!isCourtListboxOpen) openCourtListbox();
-    });
-
-    $courtInput.addEventListener('click', () => {
-      if (isCourtListboxOpen) {
-        closeCourtListbox();
-      } else {
-        currentCourtInputValue = $courtInput.value;
-        filterCourts($courtInput.value || "");
-        openCourtListbox();
-        $courtInput.select();
-      }
-    });
-
-    $courtInput.addEventListener('focus', () => {
-      if (!isCourtListboxOpen) {
-        currentCourtInputValue = $courtInput.value;
-        filterCourts($courtInput.value || "");
-        openCourtListbox();
-        $courtInput.select();
-      }
-    });
-
-    $courtInput.addEventListener('blur', () => {
-      setTimeout(() => {
-        if (!isCourtListboxOpen) return;
-
-        // Restore previous value if no new selection was made
-        if ($courtInput.value !== currentCourtName) {
-          $courtInput.value = currentCourtInputValue;
-        }
-        closeCourtListbox();
-      }, 200);
-    });
-
-    /* ---------- Reset ---------- */
-    $reset.addEventListener('click', () => {
-      $courtInput.value = "";
-      currentCourtInputValue = "";
-      currentCourtName = "";
-      closeCourtListbox();
-
-      $comboboxInput.value = "";
-      $comboboxInput.disabled = true;
-      $comboboxWrapper.classList.add('disabled');
-      selectedLocation = null;
-      currentLocationInputValue = "";
-      allLocations = [];
-      $listbox.innerHTML = "";
-      closeListbox();
-
-      hide($efiling);
-      hide($results);
-      hide($physicalPrompt);
-      hide($summary);
-      hide($confirmation);
-      sendHeightSoon();
-      scrollToEl(document.getElementById('form-container'));
-    });
-
-    /* ---------- IFRAME AUTO-HEIGHT ---------- */
-    let heightTimer = null;
-    function sendHeightSoon() {
-      if (heightTimer) clearTimeout(heightTimer);
-      heightTimer = setTimeout(() => {
-        try {
-          const height = document.documentElement.scrollHeight;
-          window.parent.postMessage({ type: "onelegal_court_lookup_height", height }, "*");
-        } catch (e) {}
-      }, 60);
+    // ---------- Preselect court (URL param + postMessage) ----------
+    function normalizeCourtName(s) {
+      return String(s || "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLowerCase();
     }
-    window.addEventListener("load", sendHeightSoon);
-    window.addEventListener("resize", sendHeightSoon);
-    const observer = new MutationObserver(sendHeightSoon);
-    observer.observe(document.body, { childList: true, subtree: true });
-  })();
-  </script>
-</body>
-</html>
+
+    function setCourtByName(rawName) {
+      const wanted = normalizeCourtName(rawName);
+      if (!wanted) return false;
+
+      // Prefer exact match
+      let match = allCourts.find(c => normalizeCourtName(c) === wanted);
+
+      // Fallback: "contains" match (lets you pass "Alameda County")
+      if (!match) {
+        match = allCourts.find(c => normalizeCourtName(c).includes(wanted));
+      }
+
+      if (match) {
+        selectCourt(match);
+        return true;
+      }

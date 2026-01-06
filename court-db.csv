@@ -245,9 +245,9 @@
 10482,"Solano County, Superior Court of California",Family Law-Probate,State,California,CA,Solano,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,600 Union Ave,Fairfield,California,94533-6318
 10483,"Solano County, Superior Court of California",Fairfield,State,California,CA,Solano,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,580 Texas Street,Fairfield,California,94533-6318
 10484,"Solano County, Superior Court of California",Vallejo,State,California,CA,Solano,0,0,1,12:00 PM,Same-Day,12:00 AM,,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,321 Tuolumne Street,Vallejo,California,94590-5700
-10485,"Sonoma County, Superior Court of California",Sonoma Criminal,State,California,CA,Sonoma,0,0,1,12:00 PM,Same-Day,5:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,25 MB,35 MB,600 Administration Dr.,Santa Rosa,California,95403
-10486,"Sonoma County, Superior Court of California",Sonoma Civil,State,California,CA,Sonoma,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,25 MB,35 MB,3055 Cleveland Ave.,Santa Rosa,California,95403-2818
-10487,"Sonoma County, Superior Court of California",Sonoma Family Law,State,California,CA,Sonoma,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,25 MB,35 MB,3055 Cleveland Avenue,Santa Rosa,California,95403-2122
+10485,"Sonoma County, Superior Court of California",Sonoma Criminal,State,California,CA,Sonoma,0,0,1,12:00 PM,Same-Day,5:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,50 MB,50 MB,600 Administration Dr.,Santa Rosa,California,95403
+10486,"Sonoma County, Superior Court of California",Sonoma Civil,State,California,CA,Sonoma,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,50 MB,50 MB,3055 Cleveland Ave.,Santa Rosa,California,95403-2818
+10487,"Sonoma County, Superior Court of California",Sonoma Family Law,State,California,CA,Sonoma,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,50 MB,50 MB,3055 Cleveland Avenue,Santa Rosa,California,95403-2122
 10488,"Stanislaus County, Superior Court of California",Modesto,State,California,CA,Stanislaus,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,25 MB,35 MB,"801 10th Street, 4th Floor",Modesto,California,95354
 10489,"Stanislaus County, Superior Court of California",Modesto-Family,State,California,CA,Stanislaus,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,25 MB,35 MB,"1100 I Street,  P.O. Box 1098",Modesto,California,95353
 12445,"Stanislaus County, Superior Court of California",Turlock,State,California,CA,Stanislaus,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,25 MB,35 MB,300 Starr Ave.,Turlock,California,95380
@@ -300,5 +300,6 @@
 10502,"Yolo County, Superior Court of California",Yolo,State,California,CA,Yolo,1,0,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,25 MB,35 MB,1000 Main Street,Woodland,California,95695-3551
 
 10503,"Yuba County, Superior Court of California",Marysville,State,California,CA,Yuba,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,25 MB,35 MB,215 Fifth Street,Marysville,California,95901-5794
+
 
 

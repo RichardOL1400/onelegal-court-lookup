@@ -960,6 +960,39 @@
       sendHeightSoon();
     }
 
+    <script>
+(function () {
+  function getCourtFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("court"); // already decoded
+  }
+
+  function sendCourtToIframe(courtName) {
+    const frame = document.getElementById("courtLookupFrame");
+    if (!frame || !frame.contentWindow) return;
+
+    frame.contentWindow.postMessage(
+      { type: "onelegal_set_court", court: courtName },
+      "*" // You can lock this down to the GH Pages origin later if you want
+    );
+  }
+
+  const court = getCourtFromUrl();
+  if (!court) return;
+
+  // Send once iframe loads, then again shortly after (covers slow load)
+  const frame = document.getElementById("courtLookupFrame");
+  if (frame) {
+    frame.addEventListener("load", function () {
+      sendCourtToIframe(court);
+      setTimeout(() => sendCourtToIframe(court), 250);
+      setTimeout(() => sendCourtToIframe(court), 1000);
+    });
+  }
+})();
+</script>
+
+
     // Court combobox events (Option A behavior)
     $courtInput.addEventListener('input', () => {
       const query = $courtInput.value;

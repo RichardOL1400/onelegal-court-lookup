@@ -1,13 +1,13 @@
 ﻿CourtId,DisplayName,Name,CourtJurisdictionType,State,StateCode,County,CanFile,CanCourtesyCopy,CanEfiling,FileDeadline,FileServiceLevel,CCDeliveryDeadline,CCDeliveryServiceLevel,EFilingDivisions,EFilingStatus,EFilingDeadline,EFilingRecommendedBy,EFM,MaxEfileDocSize,MaxEfileEnvSize,Address_Address1,Address_City,Address_State,Address_PostalCode
-10250,"Alameda County, Superior Court of California",Oakland Administration Building,State,California,CA,Alameda,0,1,1,12:00 PM,Same-Day,12:00 PM,Same-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,25 MB,65 MB,"1221 Oak Street, 3rd and 4th floors",Oakland,California,94612
-10251,"Alameda County, Superior Court of California",Shoreline Family Law,State,California,CA,Alameda,1,0,1,12:00 PM,NULL,5:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,25 MB,65 MB,2233 Shoreline Drive,Alameda,California,94501
-10252,"Alameda County, Superior Court of California",Berkeley Probate,State,California,CA,Alameda,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,25 MB,65 MB,2120 Martin Luther King Jr. Way,Berkeley,California,94704
-10253,"Alameda County, Superior Court of California",Fremont Civil Probate Family Law,State,California,CA,Alameda,1,0,1,12:00 PM,Same-Day,12:00 AM,,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,25 MB,65 MB,39439 Paseo Padre Parkway,Fremont,California,94539
-10254,"Alameda County, Superior Court of California",Hayward Family Law,State,California,CA,Alameda,1,1,1,12:00 PM,Same-Day,12:00 PM,Same-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,25 MB,65 MB,24405 Amador Street,Hayward,California,94544
-10255,"Alameda County, Superior Court of California",Hayward Civil,State,California,CA,Alameda,1,1,1,12:00 PM,Same-Day,12:00 PM,Same-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,25 MB,65 MB,24405 Amador Street,Hayward,California,94544
-10256,"Alameda County, Superior Court of California",Oakland Civil,State,California,CA,Alameda,1,1,1,12:00 PM,Same-Day,12:00 PM,Same-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,25 MB,65 MB,"1225 Fallon Street,  #109",Oakland,California,94612-4293
-10257,"Alameda County, Superior Court of California",Wiley W. Manuel Courthouse,State,California,CA,Alameda,1,1,1,12:00 PM,Same-Day,12:00 AM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,25 MB,65 MB,661 Washington Street,Oakland,California,94607
-10258,"Alameda County, Superior Court of California",Pleasanton Civil Probate Family Law,State,California,CA,Alameda,1,0,1,12:00 PM,Same-Day,12:00 AM,,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,25 MB,65 MB,5672 Stoneridge Drive,Pleasanton,California,94588
+10250,"Alameda County, Superior Court of California",Oakland Administration Building,State,California,CA,Alameda,0,1,1,12:00 PM,Same-Day,12:00 PM,Same-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,"1221 Oak Street, 3rd and 4th floors",Oakland,California,94612
+10251,"Alameda County, Superior Court of California",Shoreline Family Law,State,California,CA,Alameda,1,0,1,12:00 PM,NULL,5:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,2233 Shoreline Drive,Alameda,California,94501
+10252,"Alameda County, Superior Court of California",Berkeley Probate,State,California,CA,Alameda,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,2120 Martin Luther King Jr. Way,Berkeley,California,94704
+10253,"Alameda County, Superior Court of California",Fremont Civil Probate Family Law,State,California,CA,Alameda,1,0,1,12:00 PM,Same-Day,12:00 AM,,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,39439 Paseo Padre Parkway,Fremont,California,94539
+10254,"Alameda County, Superior Court of California",Hayward Family Law,State,California,CA,Alameda,1,1,1,12:00 PM,Same-Day,12:00 PM,Same-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,24405 Amador Street,Hayward,California,94544
+10255,"Alameda County, Superior Court of California",Hayward Civil,State,California,CA,Alameda,1,1,1,12:00 PM,Same-Day,12:00 PM,Same-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,24405 Amador Street,Hayward,California,94544
+10256,"Alameda County, Superior Court of California",Oakland Civil,State,California,CA,Alameda,1,1,1,12:00 PM,Same-Day,12:00 PM,Same-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,"1225 Fallon Street,  #109",Oakland,California,94612-4293
+10257,"Alameda County, Superior Court of California",Wiley W. Manuel Courthouse,State,California,CA,Alameda,1,1,1,12:00 PM,Same-Day,12:00 AM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,661 Washington Street,Oakland,California,94607
+10258,"Alameda County, Superior Court of California",Pleasanton Civil Probate Family Law,State,California,CA,Alameda,1,0,1,12:00 PM,Same-Day,12:00 AM,,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,JTI,120 MB,120 MB,5672 Stoneridge Drive,Pleasanton,California,94588
 10259,"Alpine County, Superior Court of California",Alpine,State,California,CA,Alpine,1,1,0,12:00 PM,Next-Day,12:00 PM,Next-Day,,,,,,,,"14777 State Route 89, P.O. Box 518",Markleeville,California,96120
 10260,"Amador County, Superior Court of California",Amador,State,California,CA,Amador,1,1,0,12:00 PM,Next-Day,12:00 PM,Next-Day,,,,,,,,500 Argonaut Lane,Jackson,California,95642-9534
 10261,"Butte County, Superior Court of California",Chico,State,California,CA,Butte,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,80 MB,80 MB,1775 Concord Ave.,Chico,California,95928
@@ -300,6 +300,7 @@
 10502,"Yolo County, Superior Court of California",Yolo,State,California,CA,Yolo,1,0,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,25 MB,35 MB,1000 Main Street,Woodland,California,95695-3551
 
 10503,"Yuba County, Superior Court of California",Marysville,State,California,CA,Yuba,1,1,1,12:00 PM,Next-Day,12:00 PM,Next-Day,All Non-Criminal,Mandatory,11:59 PM,11:45 PM,eFileCA,25 MB,35 MB,215 Fifth Street,Marysville,California,95901-5794
+
 
 
 

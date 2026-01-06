@@ -916,3 +916,107 @@
         selectCourt(match);
         return true;
       }
+      return false;
+    }
+
+    // 1) Preselect via URL query param (?court=...)
+    // Supports both %20 encoding and + spaces from some systems
+    const params = new URLSearchParams(window.location.search);
+    const courtFromUrlRaw = params.get("court");
+    const courtFromUrl = courtFromUrlRaw ? courtFromUrlRaw.replace(/\+/g, " ") : "";
+    if (courtFromUrl) {
+      setCourtByName(courtFromUrl);
+    }
+
+    // 2) Preselect via postMessage from parent (iframe embedding page)
+    window.addEventListener("message", (event) => {
+      const msg = event.data;
+      if (!msg || typeof msg !== "object") return;
+
+      if (msg.type === "onelegal_set_court" && msg.court) {
+        setCourtByName(msg.court);
+      }
+    });
+
+    // Court combobox events
+    $courtInput.addEventListener('input', () => {
+      const query = $courtInput.value;
+      filterCourts(query);
+      if (!isCourtListboxOpen) openCourtListbox();
+    });
+
+    $courtInput.addEventListener('click', () => {
+      if (isCourtListboxOpen) {
+        closeCourtListbox();
+      } else {
+        currentCourtInputValue = $courtInput.value;
+        $courtInput.value = "";
+        filterCourts("");
+        openCourtListbox();
+      }
+    });
+
+    $courtInput.addEventListener('focus', () => {
+      if (!isCourtListboxOpen) {
+        currentCourtInputValue = $courtInput.value;
+        $courtInput.value = "";
+        filterCourts("");
+        openCourtListbox();
+      }
+    });
+
+    $courtInput.addEventListener('blur', () => {
+      setTimeout(() => {
+        if (!isCourtListboxOpen) return;
+        if ($courtInput.value !== currentCourtName) {
+          $courtInput.value = currentCourtInputValue;
+        }
+        closeCourtListbox();
+      }, 200);
+    });
+
+    /* ---------- Reset ---------- */
+    $reset.addEventListener('click', () => {
+      $courtInput.value = "";
+      closeCourtListbox();
+
+      $comboboxInput.value = "";
+      $comboboxInput.disabled = true;
+      $comboboxWrapper.classList.add('disabled');
+      selectedLocation = null;
+      currentCourtName = "";
+      allLocations = [];
+      $listbox.innerHTML = "";
+      closeListbox();
+
+      hide($efiling);
+      hide($results);
+      hide($physicalPrompt);
+      hide($summary);
+      hide($confirmation);
+      sendHeightSoon();
+      scrollToEl(document.getElementById('form-container'));
+    });
+
+    // Build initial court list
+    populateCourtListbox();
+
+    /* ---------- IFRAME AUTO-HEIGHT ---------- */
+    let heightTimer = null;
+    function sendHeightSoon() {
+      if (heightTimer) clearTimeout(heightTimer);
+      heightTimer = setTimeout(() => {
+        try {
+          const height = document.documentElement.scrollHeight;
+          window.parent.postMessage({ type: "onelegal_court_lookup_height", height }, "*");
+        } catch (e) {}
+      }, 60);
+    }
+    window.addEventListener("load", sendHeightSoon);
+    window.addEventListener("resize", sendHeightSoon);
+    const observer = new MutationObserver(sendHeightSoon);
+    observer.observe(document.body, { childList: true, subtree: true });
+  })();
+  </script>
+</body>
+</html>

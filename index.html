@@ -1032,11 +1032,22 @@
 
     // ----- SIGNAL READY TO PARENT -----
     // Tell parent page that iframe is ready to receive court selection
-    try {
-      window.parent.postMessage({ type: "onelegal_court_lookup_ready" }, "*");
-    } catch (e) {
-      // Ignore if not in iframe
+    // Send multiple times to avoid race conditions with parent listener setup
+    function sendReadySignal() {
+      try {
+        window.parent.postMessage({ type: "onelegal_court_lookup_ready" }, "*");
+      } catch (e) {
+        // Ignore if not in iframe
+      }
     }
+
+    // Send immediately
+    sendReadySignal();
+
+    // Send again after small delays to ensure parent receives it
+    setTimeout(sendReadySignal, 100);
+    setTimeout(sendReadySignal, 300);
+    setTimeout(sendReadySignal, 600);
 
     // ----- POSTMESSAGE LISTENER (for parent page preselection) -----
     window.addEventListener('message', (event) => {

@@ -1030,6 +1030,14 @@
       }
     }
 
+    // ----- SIGNAL READY TO PARENT -----
+    // Tell parent page that iframe is ready to receive court selection
+    try {
+      window.parent.postMessage({ type: "onelegal_court_lookup_ready" }, "*");
+    } catch (e) {
+      // Ignore if not in iframe
+    }
+
     // ----- POSTMESSAGE LISTENER (for parent page preselection) -----
     window.addEventListener('message', (event) => {
       // Accept messages with court name from parent page

@@ -1030,6 +1030,31 @@
       }
     }
 
+    // ----- POSTMESSAGE LISTENER (for parent page preselection) -----
+    window.addEventListener('message', (event) => {
+      // Accept messages with court name from parent page
+      if (event.data && event.data.court) {
+        const courtName = String(event.data.court).trim();
+
+        if (!courtName) return;
+
+        // Try exact match first
+        const exact = allCourts.find(c => c.toLowerCase() === courtName.toLowerCase());
+        if (exact) {
+          selectCourt(exact);
+          return;
+        }
+
+        // Fallback to fuzzy match to handle slight variations
+        if (courtFuse) {
+          const match = courtFuse.search(courtName, { limit: 1 })[0];
+          if (match && match.item && match.item.name) {
+            selectCourt(match.item.name);
+          }
+        }
+      }
+    });
+
     // ----- IFRAME AUTO-HEIGHT -----
     let heightTimer = null;
     function sendHeightSoon() {

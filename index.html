@@ -548,108 +548,156 @@
     }
 
     function scrollToEl(el) {
-      try { el.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {}
+      try {
+        if (!el) {
+          console.warn('scrollToEl called with null/undefined element');
+          return;
+        }
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (error) {
+        console.error('Error scrolling to element:', error);
+      }
     }
 
     function wireToggles(root) {
-      const toggles = root.querySelectorAll('[data-toggle]');
-      toggles.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-toggle');
-          const el = document.getElementById(id);
-          if (!el) return;
-          const nowHidden = el.classList.toggle('hidden');
-          const expanded = !nowHidden;
-          btn.setAttribute('aria-expanded', String(expanded));
-          btn.textContent = expanded ? "Hide filing details" : "Show filing details (EFM, size limits, eligibility)";
-          sendHeightSoon();
+      try {
+        if (!root) {
+          console.warn('wireToggles called with null/undefined root');
+          return;
+        }
+
+        const toggles = root.querySelectorAll('[data-toggle]');
+        toggles.forEach(btn => {
+          btn.addEventListener('click', () => {
+            try {
+              const id = btn.getAttribute('data-toggle');
+              if (!id) {
+                console.warn('Toggle button missing data-toggle attribute');
+                return;
+              }
+
+              const el = document.getElementById(id);
+              if (!el) {
+                console.warn(`Toggle target element "${id}" not found`);
+                return;
+              }
+
+              const nowHidden = el.classList.toggle('hidden');
+              const expanded = !nowHidden;
+              btn.setAttribute('aria-expanded', String(expanded));
+              btn.textContent = expanded ? "Hide filing details" : "Show filing details (EFM, size limits, eligibility)";
+              sendHeightSoon();
+            } catch (error) {
+              console.error('Error in toggle click handler:', error);
+            }
+          });
         });
-      });
+      } catch (error) {
+        console.error('Error wiring toggles:', error);
+      }
     }
 
     function renderSummary(courtWide, locationData) {
-      const canEF = isOne(courtWide.CanEfiling);
-      const canFile = locationData ? isOne(locationData.CanFile) : null;
-      const canCC = locationData ? isOne(locationData.CanCourtesyCopy) : null;
+      try {
+        if (!courtWide) {
+          console.error('No court data provided to renderSummary');
+          return;
+        }
 
-      $summary.innerHTML = `
-        <h3>Availability Summary</h3>
-        <div class="summary-grid">
-          <div class="summary-item">
-            <span class="summary-label">eFiling</span>
-            ${pillHTML(canEF)}
+        const canEF = isOne(courtWide.CanEfiling);
+        const canFile = locationData ? isOne(locationData.CanFile) : null;
+        const canCC = locationData ? isOne(locationData.CanCourtesyCopy) : null;
+
+        $summary.innerHTML = `
+          <h3>Availability Summary</h3>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">eFiling</span>
+              ${pillHTML(canEF)}
+            </div>
+            ${locationData ? `
+              <div class="summary-item">
+                <span class="summary-label">Physical Filing</span>
+                ${pillHTML(canFile)}
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Courtesy Copy</span>
+                ${pillHTML(canCC)}
+              </div>
+            ` : ''}
           </div>
-          ${locationData ? `
-            <div class="summary-item">
-              <span class="summary-label">Physical Filing</span>
-              ${pillHTML(canFile)}
-            </div>
-            <div class="summary-item">
-              <span class="summary-label">Courtesy Copy</span>
-              ${pillHTML(canCC)}
-            </div>
-          ` : ''}
-        </div>
-      `;
-      show($summary);
-      sendHeightSoon();
+        `;
+        show($summary);
+        sendHeightSoon();
+      } catch (error) {
+        console.error('Error rendering summary:', error);
+      }
     }
 
     function renderEFiling(courtWide) {
-      const canEF = isOne(courtWide.CanEfiling);
-      const status = (courtWide.EFilingStatus || "").trim();
-      const divisions = (courtWide.EFilingDivisions || "").trim();
-      const deadline = (courtWide.EFilingDeadline || "11:59 PM").trim();
-      const recBy = (courtWide.EFilingRecommendedBy || "11:45 PM").trim();
-      const efm = (courtWide.EFM || "").trim();
-      const maxDoc = (courtWide.MaxEfileDocSize || "").trim();
-      const maxEnv = (courtWide.MaxEfileEnvSize || "").trim();
+      try {
+        if (!courtWide) {
+          console.error('No court data provided to renderEFiling');
+          return;
+        }
 
-      const detailsId = "efiling-details";
+        const canEF = isOne(courtWide.CanEfiling);
+        const status = (courtWide.EFilingStatus || "").trim();
+        const divisions = (courtWide.EFilingDivisions || "").trim();
+        const deadline = (courtWide.EFilingDeadline || "11:59 PM").trim();
+        const recBy = (courtWide.EFilingRecommendedBy || "11:45 PM").trim();
+        const efm = (courtWide.EFM || "").trim();
+        const maxDoc = (courtWide.MaxEfileDocSize || "").trim();
+        const maxEnv = (courtWide.MaxEfileEnvSize || "").trim();
 
-      $efiling.innerHTML = `
-        <div class="card-title">
-          <h2>eFiling</h2>
-          <div class="scope">Court-wide, applies to all courthouse locations</div>
-        </div>
+        const detailsId = "efiling-details";
 
-        <div class="row">
-          <span class="k">Availability</span>
-          <span class="v">${pillHTML(canEF)}</span>
-        </div>
+        $efiling.innerHTML = `
+          <div class="card-title">
+            <h2>eFiling</h2>
+            <div class="scope">Court-wide, applies to all courthouse locations</div>
+          </div>
 
-        ${canEF ? `
-          ${divisions ? `
-            <div class="row">
-              <span class="k">Divisions</span>
-              <span class="v">${esc(divisions)}</span>
+          <div class="row">
+            <span class="k">Availability</span>
+            <span class="v">${pillHTML(canEF)}</span>
+          </div>
+
+          ${canEF ? `
+            ${divisions ? `
+              <div class="row">
+                <span class="k">Divisions</span>
+                <span class="v">${esc(divisions)}</span>
+              </div>
+            ` : ""}
+
+            <div class="deadline-box">
+              <div class="label">Court Deadline</div>
+              <div class="time">${esc(deadline)}</div>
+              <div class="hint">Submit through One Legal by <strong>${esc(recBy)}</strong> to meet this deadline.</div>
             </div>
-          ` : ""}
 
-          <div class="deadline-box">
-            <div class="label">Court Deadline</div>
-            <div class="time">${esc(deadline)}</div>
-            <div class="hint">Submit through One Legal by <strong>${esc(recBy)}</strong> to meet this deadline.</div>
-          </div>
+            <button class="toggle" type="button" data-toggle="${detailsId}" aria-expanded="false">
+              Show filing details (EFM, size limits, eligibility)
+            </button>
 
-          <button class="toggle" type="button" data-toggle="${detailsId}" aria-expanded="false">
-            Show filing details (EFM, size limits, eligibility)
-          </button>
+            <div id="${detailsId}" class="details hidden" style="margin-top:10px;">
+              ${status ? `<div class="row"><span class="k">Status</span><span class="v">${esc(status)}</span></div>` : ""}
+              ${efm ? `<div class="row"><span class="k">EFM</span><span class="v">${esc(efm)}</span></div>` : ""}
+              ${maxDoc ? `<div class="row"><span class="k">Max Doc Size</span><span class="v">${esc(maxDoc)}</span></div>` : ""}
+              ${maxEnv ? `<div class="row"><span class="k">Max Envelope Size</span><span class="v">${esc(maxEnv)}</span></div>` : ""}
+            </div>
+          ` : `
+            <p style="color:#6b6b6b; font-size:13px;">This court does not currently offer eFiling through One Legal.</p>
+          `}
+        `;
 
-          <div id="${detailsId}" class="details hidden" style="margin-top:10px;">
-            ${status ? `<div class="row"><span class="k">Status</span><span class="v">${esc(status)}</span></div>` : ""}
-            ${efm ? `<div class="row"><span class="k">EFM</span><span class="v">${esc(efm)}</span></div>` : ""}
-            ${maxDoc ? `<div class="row"><span class="k">Max Doc Size</span><span class="v">${esc(maxDoc)}</span></div>` : ""}
-            ${maxEnv ? `<div class="row"><span class="k">Max Envelope Size</span><span class="v">${esc(maxEnv)}</span></div>` : ""}
-          </div>
-        ` : `
-          <p style="color:#6b6b6b; font-size:13px;">This court does not currently offer eFiling through One Legal.</p>
-        `}
-      `;
-
-      show($efiling);
-      wireToggles($efiling);
-      sendHeightSoon();
+        show($efiling);
+        wireToggles($efiling);
+        sendHeightSoon();
+      } catch (error) {
+        console.error('Error rendering eFiling section:', error);
+      }
     }
 
     function renderPhysicalPrompt() {
@@ -659,119 +707,148 @@
     }
 
     function renderLocationServices(locationData, courtWide) {
-      const canFile = isOne(locationData.CanFile);
-      const canCC = isOne(locationData.CanCourtesyCopy);
-      const addr = formatAddress(locationData);
+      try {
+        if (!locationData) {
+          console.error('No location data provided to renderLocationServices');
+          return;
+        }
 
-      $results.innerHTML = `
-        <div class="card-title">
-          <h2>Physical Services</h2>
-          <div class="scope">Courthouse-specific, varies by location</div>
-        </div>
+        if (!courtWide) {
+          console.error('No court data provided to renderLocationServices');
+          return;
+        }
 
-        <div class="row"><span class="k">Court</span><span class="v">${esc(locationData.DisplayName)}</span></div>
-        <div class="row"><span class="k">Courthouse</span><span class="v">${esc(locationData.Name)}</span></div>
-        ${addr ? `<div class="row"><span class="k">Address</span><span class="v">${esc(addr)}</span></div>` : ""}
+        const canFile = isOne(locationData.CanFile);
+        const canCC = isOne(locationData.CanCourtesyCopy);
+        const addr = formatAddress(locationData);
 
-        <hr/>
+        $results.innerHTML = `
+          <div class="card-title">
+            <h2>Physical Services</h2>
+            <div class="scope">Courthouse-specific, varies by location</div>
+          </div>
 
-        <h3 style="margin:0 0 10px; font-size:16px; font-weight:600;">Physical Court Filing</h3>
-        <div class="row"><span class="k">Availability</span><span class="v">${pillHTML(canFile)}</span></div>
+          <div class="row"><span class="k">Court</span><span class="v">${esc(locationData.DisplayName || 'N/A')}</span></div>
+          <div class="row"><span class="k">Courthouse</span><span class="v">${esc(locationData.Name || 'N/A')}</span></div>
+          ${addr ? `<div class="row"><span class="k">Address</span><span class="v">${esc(addr)}</span></div>` : ""}
 
-        ${canFile ? `
-          ${(locationData.FileDeadline || locationData.FileServiceLevel) ? `
-            <div class="deadline-box">
-              <div class="label">Order by</div>
-              <div class="time">${esc((locationData.FileDeadline || "").trim())}</div>
-              <div class="hint">${locationData.FileServiceLevel ? `<strong>${esc((locationData.FileServiceLevel || "").trim())}</strong> service` : ""}</div>
-            </div>
+          <hr/>
+
+          <h3 style="margin:0 0 10px; font-size:16px; font-weight:600;">Physical Court Filing</h3>
+          <div class="row"><span class="k">Availability</span><span class="v">${pillHTML(canFile)}</span></div>
+
+          ${canFile ? `
+            ${(locationData.FileDeadline || locationData.FileServiceLevel) ? `
+              <div class="deadline-box">
+                <div class="label">Order by</div>
+                <div class="time">${esc((locationData.FileDeadline || "").trim())}</div>
+                <div class="hint">${locationData.FileServiceLevel ? `<strong>${esc((locationData.FileServiceLevel || "").trim())}</strong> service` : ""}</div>
+              </div>
+            ` : ""}
           ` : ""}
-        ` : ""}
 
-        <hr/>
+          <hr/>
 
-        <h3 style="margin:0 0 10px; font-size:16px; font-weight:600;">Courtesy Copy Delivery</h3>
-        <div class="row"><span class="k">Availability</span><span class="v">${pillHTML(canCC)}</span></div>
+          <h3 style="margin:0 0 10px; font-size:16px; font-weight:600;">Courtesy Copy Delivery</h3>
+          <div class="row"><span class="k">Availability</span><span class="v">${pillHTML(canCC)}</span></div>
 
-        ${canCC ? `
-          ${(locationData.CCDeliveryDeadline || locationData.CCDeliveryServiceLevel) ? `
-            <div class="deadline-box">
-              <div class="label">Order by</div>
-              <div class="time">${esc((locationData.CCDeliveryDeadline || "").trim())}</div>
-              <div class="hint">${locationData.CCDeliveryServiceLevel ? `<strong>${esc((locationData.CCDeliveryServiceLevel || "").trim())}</strong> service` : ""}</div>
-            </div>
+          ${canCC ? `
+            ${(locationData.CCDeliveryDeadline || locationData.CCDeliveryServiceLevel) ? `
+              <div class="deadline-box">
+                <div class="label">Order by</div>
+                <div class="time">${esc((locationData.CCDeliveryDeadline || "").trim())}</div>
+                <div class="hint">${locationData.CCDeliveryServiceLevel ? `<strong>${esc((locationData.CCDeliveryServiceLevel || "").trim())}</strong> service` : ""}</div>
+              </div>
+            ` : ""}
           ` : ""}
-        ` : ""}
-      `;
+        `;
 
-      show($results);
-      hide($physicalPrompt);
+        show($results);
+        hide($physicalPrompt);
 
-      renderSummary(courtWide, locationData);
-      sendHeightSoon();
+        renderSummary(courtWide, locationData);
+        sendHeightSoon();
+      } catch (error) {
+        console.error('Error rendering location services:', error);
+      }
     }
 
     // ----- Location combobox -----
     function populateListbox(locations) {
-      $listbox.innerHTML = "";
+      try {
+        if (!$listbox) {
+          console.error('Listbox element not found');
+          return;
+        }
 
-      if (locations.length === 0) {
-        const empty = document.createElement('li');
-        empty.className = 'listbox-empty';
-        empty.setAttribute('role', 'presentation');
-        empty.textContent = 'No matching courthouse locations';
-        $listbox.appendChild(empty);
-        return;
-      }
+        $listbox.innerHTML = "";
 
-      const grouped = {};
-      locations.forEach(loc => {
-        const county = loc.County || "Other";
-        if (!grouped[county]) grouped[county] = [];
-        grouped[county].push(loc);
-      });
+        if (!locations || locations.length === 0) {
+          const empty = document.createElement('li');
+          empty.className = 'listbox-empty';
+          empty.setAttribute('role', 'presentation');
+          empty.textContent = 'No matching courthouse locations';
+          $listbox.appendChild(empty);
+          return;
+        }
 
-      Object.keys(grouped).sort().forEach(county => {
-        const groupHeader = document.createElement('li');
-        groupHeader.className = 'listbox-group';
-        groupHeader.setAttribute('role', 'presentation');
-        groupHeader.textContent = county;
-        $listbox.appendChild(groupHeader);
-
-        grouped[county].sort((a, b) => (a.Name || "").localeCompare(b.Name || "")).forEach(loc => {
-          const option = document.createElement('li');
-          option.className = 'listbox-option';
-          option.setAttribute('role', 'option');
-          option.setAttribute('tabindex', '-1');
-          option.setAttribute('data-court-id', loc.CourtId);
-          option.textContent = loc.Name;
-
-          option.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            selectLocation(loc);
-          });
-
-          $listbox.appendChild(option);
+        const grouped = {};
+        locations.forEach(loc => {
+          const county = loc.County || "Other";
+          if (!grouped[county]) grouped[county] = [];
+          grouped[county].push(loc);
         });
-      });
+
+        Object.keys(grouped).sort().forEach(county => {
+          const groupHeader = document.createElement('li');
+          groupHeader.className = 'listbox-group';
+          groupHeader.setAttribute('role', 'presentation');
+          groupHeader.textContent = county;
+          $listbox.appendChild(groupHeader);
+
+          grouped[county].sort((a, b) => (a.Name || "").localeCompare(b.Name || "")).forEach(loc => {
+            const option = document.createElement('li');
+            option.className = 'listbox-option';
+            option.setAttribute('role', 'option');
+            option.setAttribute('tabindex', '-1');
+            option.setAttribute('data-court-id', loc.CourtId || '');
+            option.textContent = loc.Name || 'Unknown Location';
+
+            option.addEventListener('mousedown', (e) => {
+              e.preventDefault();
+              selectLocation(loc);
+            });
+
+            $listbox.appendChild(option);
+          });
+        });
+      } catch (error) {
+        console.error('Error populating location listbox:', error);
+      }
     }
 
     function filterOptions(query) {
-      const q = (query || "").trim();
+      try {
+        const q = (query || "").trim();
 
-      if (!q) {
+        if (!q) {
+          populateListbox(allLocations);
+          return;
+        }
+
+        if (locationFuse) {
+          const results = locationFuse.search(q, { limit: 200 }).map(r => r.item);
+          populateListbox(results);
+        } else {
+          const fallback = allLocations.filter(loc =>
+            (loc.Name || "").toLowerCase().includes(q.toLowerCase())
+          );
+          populateListbox(fallback);
+        }
+      } catch (error) {
+        console.error('Error filtering courthouse locations:', error);
+        // Fallback to showing all locations on error
         populateListbox(allLocations);
-        return;
-      }
-
-      if (locationFuse) {
-        const results = locationFuse.search(q, { limit: 200 }).map(r => r.item);
-        populateListbox(results);
-      } else {
-        const fallback = allLocations.filter(loc =>
-          (loc.Name || "").toLowerCase().includes(q.toLowerCase())
-        );
-        populateListbox(fallback);
       }
     }
 
@@ -791,12 +868,30 @@
     }
 
     function selectLocation(locationData) {
-      selectedLocation = locationData;
-      $comboboxInput.value = locationData.Name;
-      closeListbox();
+      try {
+        if (!locationData) {
+          console.error('No location data provided to selectLocation');
+          return;
+        }
 
-      const courtWide = data.find(r => r.DisplayName === currentCourtName) || {};
-      renderLocationServices(locationData, courtWide);
+        selectedLocation = locationData;
+        $comboboxInput.value = locationData.Name || '';
+        closeListbox();
+
+        const courtWide = data.find(r => r.DisplayName === currentCourtName);
+
+        if (!courtWide) {
+          console.error('Court data not found for current selection');
+          alert('Unable to load court information. Please try selecting a court again.');
+          return;
+        }
+
+        renderLocationServices(locationData, courtWide);
+
+      } catch (error) {
+        console.error('Error in selectLocation:', error);
+        alert('An error occurred while selecting the courthouse location. Please try again.');
+      }
     }
 
     $comboboxInput.addEventListener('input', () => {
@@ -838,62 +933,150 @@
     });
 
     // ----- Load CSV -----
-    const csv = await fetch('court-db.csv', { cache: 'no-store' }).then(r => r.text());
-    const data = Papa.parse(csv, { header: true, skipEmptyLines: true }).data;
+    let data = [];
+    try {
+      const response = await fetch('court-db.csv', { cache: 'no-store' });
 
-    // ----- Populate courts -----
-    allCourts = uniq(data.map(r => r.DisplayName).filter(Boolean));
-
-    // Build fuzzy index for courts (strings wrapped as objects)
-    courtFuse = new Fuse(allCourts.map(name => ({ name })), {
-      keys: ["name"],
-      threshold: 0.35,
-      ignoreLocation: true,
-      minMatchCharLength: 2
-    });
-
-    function populateCourtListbox(courts = allCourts) {
-      $courtListbox.innerHTML = "";
-
-      if (courts.length === 0) {
-        const empty = document.createElement('li');
-        empty.className = 'listbox-empty';
-        empty.setAttribute('role', 'presentation');
-        empty.textContent = 'No matching courts';
-        $courtListbox.appendChild(empty);
-        return;
+      if (!response.ok) {
+        throw new Error(`Failed to load court data: HTTP ${response.status} - ${response.statusText}`);
       }
 
-      courts.forEach(courtName => {
-        const option = document.createElement('li');
-        option.className = 'listbox-option';
-        option.setAttribute('role', 'option');
-        option.setAttribute('tabindex', '-1');
-        option.textContent = courtName;
+      const csv = await response.text();
 
-        option.addEventListener('mousedown', (e) => {
-          e.preventDefault();
-          selectCourt(courtName);
-        });
+      if (!csv || csv.trim().length === 0) {
+        throw new Error('Court data file is empty');
+      }
 
-        $courtListbox.appendChild(option);
+      const parseResult = Papa.parse(csv, { header: true, skipEmptyLines: true });
+
+      if (parseResult.errors && parseResult.errors.length > 0) {
+        console.error('CSV parsing warnings:', parseResult.errors);
+      }
+
+      if (!parseResult.data || parseResult.data.length === 0) {
+        throw new Error('No valid court data found in CSV file');
+      }
+
+      data = parseResult.data;
+
+    } catch (error) {
+      console.error('Error loading court data:', error);
+
+      // Display user-friendly error message
+      const container = document.getElementById('form-container');
+      if (container) {
+        container.innerHTML = `
+          <div style="padding: 20px; text-align: center;">
+            <h2 style="color: #9b1c1c; margin-bottom: 12px;">Unable to Load Court Data</h2>
+            <p style="color: #6b6b6b; margin-bottom: 8px;">
+              ${error.message || 'An unexpected error occurred while loading court information.'}
+            </p>
+            <p style="color: #6b6b6b; font-size: 13px;">
+              Please try refreshing the page. If the problem persists, contact support.
+            </p>
+            <button
+              onclick="window.location.reload()"
+              style="
+                margin-top: 16px;
+                padding: 10px 20px;
+                background: #3a6edc;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                font-size: 14px;
+                cursor: pointer;
+                font-family: 'IBM Plex Sans', sans-serif;
+              "
+            >
+              Retry
+            </button>
+          </div>
+        `;
+      }
+
+      // Stop execution
+      return;
+    }
+
+    // ----- Populate courts -----
+    try {
+      allCourts = uniq(data.map(r => r.DisplayName).filter(Boolean));
+
+      if (allCourts.length === 0) {
+        throw new Error('No courts found in the data');
+      }
+
+      // Build fuzzy index for courts (strings wrapped as objects)
+      courtFuse = new Fuse(allCourts.map(name => ({ name })), {
+        keys: ["name"],
+        threshold: 0.35,
+        ignoreLocation: true,
+        minMatchCharLength: 2
       });
+
+    } catch (error) {
+      console.error('Error initializing court search:', error);
+      alert('Error initializing court data. Please refresh the page.');
+      return;
+    }
+
+    function populateCourtListbox(courts = allCourts) {
+      try {
+        if (!$courtListbox) {
+          console.error('Court listbox element not found');
+          return;
+        }
+
+        $courtListbox.innerHTML = "";
+
+        if (!courts || courts.length === 0) {
+          const empty = document.createElement('li');
+          empty.className = 'listbox-empty';
+          empty.setAttribute('role', 'presentation');
+          empty.textContent = 'No matching courts';
+          $courtListbox.appendChild(empty);
+          return;
+        }
+
+        courts.forEach(courtName => {
+          const option = document.createElement('li');
+          option.className = 'listbox-option';
+          option.setAttribute('role', 'option');
+          option.setAttribute('tabindex', '-1');
+          option.textContent = courtName || 'Unknown Court';
+
+          option.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            selectCourt(courtName);
+          });
+
+          $courtListbox.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error populating court listbox:', error);
+      }
     }
 
     function filterCourts(query) {
-      const q = (query || "").trim();
+      try {
+        const q = (query || "").trim();
 
-      if (!q) {
+        if (!q) {
+          populateCourtListbox(allCourts);
+          return;
+        }
+
+        if (courtFuse) {
+          const results = courtFuse.search(q, { limit: 200 }).map(r => r.item.name);
+          populateCourtListbox(results);
+        } else {
+          const fallback = allCourts.filter(c => c.toLowerCase().includes(q.toLowerCase()));
+          populateCourtListbox(fallback);
+        }
+      } catch (error) {
+        console.error('Error filtering courts:', error);
+        // Fallback to showing all courts on error
         populateCourtListbox(allCourts);
-        return;
-      }
-
-      if (courtFuse) {
-        const results = courtFuse.search(q, { limit: 200 }).map(r => r.item.name);
-        populateCourtListbox(results);
-      } else {
-        const fallback = allCourts.filter(c => c.toLowerCase().includes(q.toLowerCase()));
-        populateCourtListbox(fallback);
       }
     }
 
@@ -912,39 +1095,63 @@
     }
 
     function selectCourt(courtName) {
-      currentCourtName = courtName;
-      $courtInput.value = courtName;
-      closeCourtListbox();
+      try {
+        if (!courtName) {
+          console.error('No court name provided to selectCourt');
+          return;
+        }
 
-      // Reset courthouse
-      $comboboxInput.value = "";
-      $comboboxInput.disabled = false;
-      $comboboxWrapper.classList.remove('disabled');
-      selectedLocation = null;
-      $listbox.innerHTML = "";
-      closeListbox();
+        currentCourtName = courtName;
+        $courtInput.value = courtName;
+        closeCourtListbox();
 
-      hide($results);
-      hide($physicalPrompt);
-      hide($summary);
-      hide($confirmation);
+        // Reset courthouse
+        $comboboxInput.value = "";
+        $comboboxInput.disabled = false;
+        $comboboxWrapper.classList.remove('disabled');
+        selectedLocation = null;
+        $listbox.innerHTML = "";
+        closeListbox();
 
-      const courtWide = data.find(r => r.DisplayName === courtName) || {};
-      renderEFiling(courtWide);
-      renderSummary(courtWide, null);
+        hide($results);
+        hide($physicalPrompt);
+        hide($summary);
+        hide($confirmation);
 
-      allLocations = data.filter(r => r.DisplayName === courtName);
+        const courtWide = data.find(r => r.DisplayName === courtName);
 
-      // Build fuzzy index for locations (includes Name + address/city)
-      locationFuse = new Fuse(allLocations, {
-        keys: ["Name", "Address_Address1", "Address_City"],
-        threshold: 0.35,
-        ignoreLocation: true,
-        minMatchCharLength: 2
-      });
+        if (!courtWide) {
+          console.error(`Court "${courtName}" not found in data`);
+          alert(`Unable to find information for "${courtName}". Please try another court.`);
+          return;
+        }
 
-      renderPhysicalPrompt();
-      sendHeightSoon();
+        renderEFiling(courtWide);
+        renderSummary(courtWide, null);
+
+        allLocations = data.filter(r => r.DisplayName === courtName);
+
+        // Build fuzzy index for locations (includes Name + address/city)
+        try {
+          locationFuse = new Fuse(allLocations, {
+            keys: ["Name", "Address_Address1", "Address_City"],
+            threshold: 0.35,
+            ignoreLocation: true,
+            minMatchCharLength: 2
+          });
+        } catch (fuseError) {
+          console.error('Error initializing location search:', fuseError);
+          // Continue without fuzzy search - fallback will work
+          locationFuse = null;
+        }
+
+        renderPhysicalPrompt();
+        sendHeightSoon();
+
+      } catch (error) {
+        console.error('Error in selectCourt:', error);
+        alert('An error occurred while selecting the court. Please try again.');
+      }
     }
 
     // Court combobox events
@@ -1013,21 +1220,37 @@
 
     // ----- URL PRESELECT (supports commas etc.) -----
     function getParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      const v = params.get(name);
-      return v ? v.trim() : "";
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const v = params.get(name);
+        return v ? v.trim() : "";
+      } catch (error) {
+        console.error('Error parsing URL parameters:', error);
+        return "";
+      }
     }
 
-    const preselectCourt = getParam("court");
-    if (preselectCourt) {
-      const exact = allCourts.find(c => c.toLowerCase() === preselectCourt.toLowerCase());
-      if (exact) {
-        selectCourt(exact);
-      } else {
-        // try fuzzy match to closest court name
-        const match = courtFuse.search(preselectCourt, { limit: 1 })[0];
-        if (match && match.item && match.item.name) selectCourt(match.item.name);
+    try {
+      const preselectCourt = getParam("court");
+      if (preselectCourt) {
+        const exact = allCourts.find(c => c.toLowerCase() === preselectCourt.toLowerCase());
+        if (exact) {
+          selectCourt(exact);
+        } else if (courtFuse) {
+          // try fuzzy match to closest court name
+          try {
+            const matches = courtFuse.search(preselectCourt, { limit: 1 });
+            if (matches && matches.length > 0 && matches[0].item && matches[0].item.name) {
+              selectCourt(matches[0].item.name);
+            }
+          } catch (searchError) {
+            console.error('Error searching for court via URL parameter:', searchError);
+          }
+        }
       }
+    } catch (error) {
+      console.error('Error preselecting court from URL:', error);
+      // Continue loading the page normally
     }
 
     // ----- SIGNAL READY TO PARENT -----

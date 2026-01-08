@@ -1054,22 +1054,38 @@
       // Accept messages with court name from parent page
       if (event.data && event.data.court) {
         const courtName = String(event.data.court).trim();
+        console.log('[IFRAME] Received court from parent:', courtName);
 
-        if (!courtName) return;
+        if (!courtName) {
+          console.log('[IFRAME] Court name is empty, ignoring');
+          return;
+        }
+
+        console.log('[IFRAME] Available courts count:', allCourts.length);
+        console.log('[IFRAME] First few courts:', allCourts.slice(0, 3));
 
         // Try exact match first
         const exact = allCourts.find(c => c.toLowerCase() === courtName.toLowerCase());
         if (exact) {
+          console.log('[IFRAME] Found exact match:', exact);
           selectCourt(exact);
           return;
         }
 
+        console.log('[IFRAME] No exact match, trying fuzzy search...');
+
         // Fallback to fuzzy match to handle slight variations
         if (courtFuse) {
           const match = courtFuse.search(courtName, { limit: 1 })[0];
+          console.log('[IFRAME] Fuzzy search result:', match);
           if (match && match.item && match.item.name) {
+            console.log('[IFRAME] Selecting fuzzy match:', match.item.name);
             selectCourt(match.item.name);
+          } else {
+            console.log('[IFRAME] No fuzzy match found');
           }
+        } else {
+          console.log('[IFRAME] Fuse not initialized');
         }
       }
     });

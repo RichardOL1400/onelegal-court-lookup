@@ -827,6 +827,26 @@
       }
     }
 
+    // Subsequence matching: checks if all characters in query appear in order in text
+    function fuzzyMatch(query, text) {
+      if (!query || !text) return false;
+
+      const q = query.toLowerCase();
+      const t = text.toLowerCase();
+
+      let queryIndex = 0;
+
+      // Check if all characters in query appear in order in text
+      for (let i = 0; i < t.length && queryIndex < q.length; i++) {
+        if (t[i] === q[queryIndex]) {
+          queryIndex++;
+        }
+      }
+
+      // Return true if we matched all characters in the query
+      return queryIndex === q.length;
+    }
+
     function filterOptions(query) {
       try {
         const q = (query || "").trim();
@@ -836,15 +856,20 @@
           return;
         }
 
-        if (locationFuse) {
-          const results = locationFuse.search(q, { limit: 200 }).map(r => r.item);
-          populateListbox(results);
-        } else {
-          const fallback = allLocations.filter(loc =>
-            (loc.Name || "").toLowerCase().includes(q.toLowerCase())
-          );
-          populateListbox(fallback);
-        }
+        // Filter locations using subsequence matching
+        const results = allLocations.filter(loc => {
+          // Search in Name, FriendlyName, Address, and City
+          const searchFields = [
+            loc.Name || '',
+            loc.FriendlyName || '',
+            loc.Address_Address1 || '',
+            loc.Address_City || ''
+          ].join(' ');
+
+          return fuzzyMatch(q, searchFields);
+        });
+
+        populateListbox(results);
       } catch (error) {
         console.error('Error filtering courthouse locations:', error);
         // Fallback to showing all locations on error

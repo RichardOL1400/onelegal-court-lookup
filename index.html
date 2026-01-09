@@ -659,6 +659,9 @@
         const efm = (courtWide.EFM || "").trim();
         const maxDoc = (courtWide.MaxEfileDocSize || "").trim();
         const maxEnv = (courtWide.MaxEfileEnvSize || "").trim();
+        const courtWebsite = (courtWide.CourtWebsite || "").trim();
+        const efileFAQs = (courtWide.CourteFileFAQs || "").trim();
+        const localRules = (courtWide.CourtLocalRulesLink || "").trim();
 
         const detailsId = "efiling-details";
 
@@ -687,8 +690,8 @@
               <div class="hint">Submit through One Legal by <strong>${esc(recBy)}</strong> to meet this deadline.</div>
             </div>
 
-            <button class="toggle" type="button" data-toggle="${detailsId}" aria-expanded="false" data-show-text="Show filing details (EFM, size limits, eligibility)" data-hide-text="Hide filing details">
-              Show filing details (EFM, size limits, eligibility)
+            <button class="toggle" type="button" data-toggle="${detailsId}" aria-expanded="false" data-show-text="eFiling details ▼" data-hide-text="eFiling details ▲">
+              eFiling details ▼
             </button>
 
             <div id="${detailsId}" class="details hidden" style="margin-top:10px;">
@@ -696,6 +699,9 @@
               ${efm ? `<div class="row"><span class="k">EFM</span><span class="v">${esc(efm)}${efm === 'FSX' ? ` <span style="font-size: 0.9em;">(Additional steps may be required to eFile in this court. <a href="https://support.onelegal.com/court-filing/connect-your-account-to-efile-in-san-francisco" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">Learn more</a>.)</span>` : efm === 'eFileCA' ? ` <span style="font-size: 0.9em;">(Additional steps may be required to eFile in this court. <a href="https://support.onelegal.com/court-filing/how-do-i-connect-to-my-states-electronic-filing-manager-efm" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">Learn more</a>.)</span>` : ''}</span></div>` : ""}
               ${maxDoc ? `<div class="row"><span class="k">Max Doc Size</span><span class="v">${esc(maxDoc)}</span></div>` : ""}
               ${maxEnv ? `<div class="row"><span class="k">Max Envelope Size</span><span class="v">${esc(maxEnv)}</span></div>` : ""}
+              ${courtWebsite ? `<div class="row"><span class="k">Court website</span><span class="v"><a href="${esc(courtWebsite)}" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">Website</a></span></div>` : ""}
+              ${efileFAQs ? `<div class="row"><span class="k">eFiling FAQs</span><span class="v"><a href="${esc(efileFAQs)}" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">FAQs</a></span></div>` : ""}
+              ${localRules ? `<div class="row"><span class="k">Local Rules</span><span class="v"><a href="${esc(localRules)}" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">Rules</a></span></div>` : ""}
             </div>
           ` : `
             <p style="color:#6b6b6b; font-size:13px;">This court does not currently offer eFiling through One Legal.</p>

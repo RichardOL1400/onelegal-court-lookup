@@ -1000,7 +1000,8 @@
 
     // ----- Populate courts -----
     try {
-      allCourts = uniq(data.map(r => r.DisplayName).filter(Boolean));
+      // Only include courts that have at least one location that is not permanently closed
+      allCourts = uniq(data.filter(r => r.PermanentlyClosed !== "1").map(r => r.DisplayName).filter(Boolean));
 
       if (allCourts.length === 0) {
         throw new Error('No courts found in the data');
@@ -1129,7 +1130,8 @@
         renderEFiling(courtWide);
         renderSummary(courtWide, null);
 
-        allLocations = data.filter(r => r.DisplayName === courtName);
+        // Filter courthouse locations to exclude permanently closed ones
+        allLocations = data.filter(r => r.DisplayName === courtName && r.PermanentlyClosed !== "1");
 
         // Build fuzzy index for locations (includes Name + address/city)
         try {

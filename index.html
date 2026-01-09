@@ -1085,13 +1085,12 @@
           return;
         }
 
-        if (courtFuse) {
-          const results = courtFuse.search(q, { limit: 200 }).map(r => r.item.name);
-          populateCourtListbox(results);
-        } else {
-          const fallback = allCourts.filter(c => c.toLowerCase().includes(q.toLowerCase()));
-          populateCourtListbox(fallback);
-        }
+        // Filter courts using substring and word-boundary matching
+        const results = allCourts.filter(courtName => {
+          return matchesSearch(q, courtName);
+        });
+
+        populateCourtListbox(results);
       } catch (error) {
         console.error('Error filtering courts:', error);
         // Fallback to showing all courts on error

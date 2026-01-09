@@ -381,6 +381,11 @@
       margin: 12px 0;
     }
 
+    .concierge-container {
+      display: grid;
+      gap: 8px;
+    }
+
     .concierge-text {
       font-size: 14px;
       font-weight: 600;
@@ -389,6 +394,8 @@
     .concierge-details {
       font-size: 12px;
       font-weight: 400;
+      color: #444;
+      line-height: 1.4;
     }
 
     .concierge-details a {
@@ -661,8 +668,12 @@
               </div>
             ` : ''}
             <div class="summary-divider"></div>
-            <div class="summary-item">
-              <span class="concierge-text">Concierge <span class="concierge-details">(One Legal places your order for you—same-day turnaround if submitted before 4pm PT on a business day. <a href="https://support.onelegal.com/concierge/one-legal-concierge-service" target="_blank" rel="noopener noreferrer">Learn more</a>.)</span></span>
+            <div class="concierge-container">
+              <div class="summary-item">
+                <span class="summary-label">Concierge</span>
+                ${pillHTML(true)}
+              </div>
+              <div class="concierge-details">(One Legal places your order for you—same-day turnaround if submitted before 4pm PT on a business day. <a href="https://support.onelegal.com/concierge/one-legal-concierge-service" target="_blank" rel="noopener noreferrer">Learn more</a>.)</div>
             </div>
           </div>
         `;

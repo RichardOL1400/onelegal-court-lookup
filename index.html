@@ -827,24 +827,21 @@
       }
     }
 
-    // Subsequence matching: checks if all characters in query appear in order in text
-    function fuzzyMatch(query, text) {
+    // Best-practice autocomplete matching:
+    // 1. Check if query appears as a substring anywhere
+    // 2. Check if query matches the start of any word (word boundary)
+    function matchesSearch(query, text) {
       if (!query || !text) return false;
 
       const q = query.toLowerCase();
       const t = text.toLowerCase();
 
-      let queryIndex = 0;
+      // Check if query appears as substring
+      if (t.includes(q)) return true;
 
-      // Check if all characters in query appear in order in text
-      for (let i = 0; i < t.length && queryIndex < q.length; i++) {
-        if (t[i] === q[queryIndex]) {
-          queryIndex++;
-        }
-      }
-
-      // Return true if we matched all characters in the query
-      return queryIndex === q.length;
+      // Check if query matches start of any word
+      const words = t.split(/\s+/);
+      return words.some(word => word.startsWith(q));
     }
 
     function filterOptions(query) {
@@ -856,17 +853,13 @@
           return;
         }
 
-        // Filter locations using subsequence matching
+        // Filter locations using substring and word-boundary matching
         const results = allLocations.filter(loc => {
           // Search in Name, FriendlyName, Address, and City
-          const searchFields = [
-            loc.Name || '',
-            loc.FriendlyName || '',
-            loc.Address_Address1 || '',
-            loc.Address_City || ''
-          ].join(' ');
-
-          return fuzzyMatch(q, searchFields);
+          return matchesSearch(q, loc.Name || '') ||
+                 matchesSearch(q, loc.FriendlyName || '') ||
+                 matchesSearch(q, loc.Address_Address1 || '') ||
+                 matchesSearch(q, loc.Address_City || '');
         });
 
         populateListbox(results);

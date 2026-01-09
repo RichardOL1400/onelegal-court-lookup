@@ -729,7 +729,7 @@
           </div>
 
           <div class="row"><span class="k">Court</span><span class="v">${esc(locationData.DisplayName || 'N/A')}</span></div>
-          <div class="row"><span class="k">Courthouse</span><span class="v">${esc(locationData.Name || 'N/A')}</span></div>
+          <div class="row"><span class="k">Courthouse</span><span class="v">${esc(locationData.Name || 'N/A')}${locationData.FriendlyName ? ` (${esc(locationData.FriendlyName)})` : ''}</span></div>
           ${addr ? `<div class="row"><span class="k">Address</span><span class="v">${esc(addr)}</span></div>` : ""}
 
           <hr/>
@@ -812,7 +812,7 @@
             option.setAttribute('role', 'option');
             option.setAttribute('tabindex', '-1');
             option.setAttribute('data-court-id', loc.CourtId || '');
-            option.textContent = loc.Name || 'Unknown Location';
+            option.textContent = (loc.Name || 'Unknown Location') + (loc.FriendlyName ? ` (${loc.FriendlyName})` : '');
 
             option.addEventListener('mousedown', (e) => {
               e.preventDefault();

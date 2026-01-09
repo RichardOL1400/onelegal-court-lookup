@@ -585,7 +585,12 @@
               const nowHidden = el.classList.toggle('hidden');
               const expanded = !nowHidden;
               btn.setAttribute('aria-expanded', String(expanded));
-              btn.textContent = expanded ? "Hide filing details" : "Show filing details (EFM, size limits, eligibility)";
+
+              // Use custom text from data attributes, or default to generic text
+              const showText = btn.getAttribute('data-show-text') || "Show details";
+              const hideText = btn.getAttribute('data-hide-text') || "Hide details";
+              btn.textContent = expanded ? hideText : showText;
+
               sendHeightSoon();
             } catch (error) {
               console.error('Error in toggle click handler:', error);
@@ -677,7 +682,7 @@
               <div class="hint">Submit through One Legal by <strong>${esc(recBy)}</strong> to meet this deadline.</div>
             </div>
 
-            <button class="toggle" type="button" data-toggle="${detailsId}" aria-expanded="false">
+            <button class="toggle" type="button" data-toggle="${detailsId}" aria-expanded="false" data-show-text="Show filing details (EFM, size limits, eligibility)" data-hide-text="Hide filing details">
               Show filing details (EFM, size limits, eligibility)
             </button>
 
@@ -745,6 +750,17 @@
                 <div class="hint">${locationData.FileServiceLevel ? `<strong>${esc((locationData.FileServiceLevel || "").trim())}</strong> service` : ""}</div>
               </div>
             ` : ""}
+
+            ${(locationData.MaxFileCCDSOPSheriffDocSize || locationData.MaxFileCCDSOPSheriffEnvSize) ? `
+              <button class="toggle" type="button" data-toggle="pfile-details" aria-expanded="false" data-show-text="Show filing details (size limits)" data-hide-text="Hide filing details">
+                Show filing details (size limits)
+              </button>
+
+              <div id="pfile-details" class="details hidden" style="margin-top:10px;">
+                ${locationData.MaxFileCCDSOPSheriffDocSize ? `<div class="row"><span class="k">Max Doc Size</span><span class="v">${esc((locationData.MaxFileCCDSOPSheriffDocSize || "").trim())}</span></div>` : ""}
+                ${locationData.MaxFileCCDSOPSheriffEnvSize ? `<div class="row"><span class="k">Max Envelope Size</span><span class="v">${esc((locationData.MaxFileCCDSOPSheriffEnvSize || "").trim())}</span></div>` : ""}
+              </div>
+            ` : ""}
           ` : ""}
 
           <hr/>
@@ -760,11 +776,23 @@
                 <div class="hint">${locationData.CCDeliveryServiceLevel ? `<strong>${esc((locationData.CCDeliveryServiceLevel || "").trim())}</strong> service` : ""}</div>
               </div>
             ` : ""}
+
+            ${(locationData.MaxFileCCDSOPSheriffDocSize || locationData.MaxFileCCDSOPSheriffEnvSize) ? `
+              <button class="toggle" type="button" data-toggle="cc-details" aria-expanded="false" data-show-text="Show filing details (size limits)" data-hide-text="Hide filing details">
+                Show filing details (size limits)
+              </button>
+
+              <div id="cc-details" class="details hidden" style="margin-top:10px;">
+                ${locationData.MaxFileCCDSOPSheriffDocSize ? `<div class="row"><span class="k">Max Doc Size</span><span class="v">${esc((locationData.MaxFileCCDSOPSheriffDocSize || "").trim())}</span></div>` : ""}
+                ${locationData.MaxFileCCDSOPSheriffEnvSize ? `<div class="row"><span class="k">Max Envelope Size</span><span class="v">${esc((locationData.MaxFileCCDSOPSheriffEnvSize || "").trim())}</span></div>` : ""}
+              </div>
+            ` : ""}
           ` : ""}
         `;
 
         show($results);
         hide($physicalPrompt);
+        wireToggles($results);
 
         renderSummary(courtWide, locationData);
         sendHeightSoon();

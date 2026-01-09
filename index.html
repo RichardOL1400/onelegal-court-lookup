@@ -612,6 +612,7 @@
         const canEF = isOne(courtWide.CanEfiling);
         const canFile = locationData ? isOne(locationData.CanFile) : null;
         const canCC = locationData ? isOne(locationData.CanCourtesyCopy) : null;
+        const canSheriff = locationData ? isOne(locationData.CanSheriff) : null;
 
         $summary.innerHTML = `
           <h3>Availability Summary</h3>
@@ -628,6 +629,10 @@
               <div class="summary-item">
                 <span class="summary-label">Courtesy Copy</span>
                 ${pillHTML(canCC)}
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Sheriff Delivery</span>
+                ${pillHTML(canSheriff)}
               </div>
             ` : ''}
           </div>
@@ -725,6 +730,7 @@
 
         const canFile = isOne(locationData.CanFile);
         const canCC = isOne(locationData.CanCourtesyCopy);
+        const canSheriff = isOne(locationData.CanSheriff);
         const addr = formatAddress(locationData);
 
         $results.innerHTML = `
@@ -783,6 +789,32 @@
               </button>
 
               <div id="cc-details" class="details hidden" style="margin-top:10px;">
+                ${locationData.MaxFileCCDSOPSheriffDocSize ? `<div class="row"><span class="k">Max Doc Size</span><span class="v">${esc((locationData.MaxFileCCDSOPSheriffDocSize || "").trim())}</span></div>` : ""}
+                ${locationData.MaxFileCCDSOPSheriffEnvSize ? `<div class="row"><span class="k">Max Envelope Size</span><span class="v">${esc((locationData.MaxFileCCDSOPSheriffEnvSize || "").trim())}</span></div>` : ""}
+              </div>
+            ` : ""}
+          ` : ""}
+
+          <hr/>
+
+          <h3 style="margin:0 0 10px; font-size:16px; font-weight:600;">Sheriff Delivery</h3>
+          <div class="row"><span class="k">Availability</span><span class="v">${pillHTML(canSheriff)}</span></div>
+
+          ${canSheriff ? `
+            ${(locationData.SheriffDeadline || locationData.SheriffServiceLevel) ? `
+              <div class="deadline-box">
+                <div class="label">Order by</div>
+                <div class="time">${esc((locationData.SheriffDeadline || "").trim())}</div>
+                <div class="hint">${locationData.SheriffServiceLevel ? `<strong>${esc((locationData.SheriffServiceLevel || "").trim())}</strong> service` : ""}</div>
+              </div>
+            ` : ""}
+
+            ${(locationData.MaxFileCCDSOPSheriffDocSize || locationData.MaxFileCCDSOPSheriffEnvSize) ? `
+              <button class="toggle" type="button" data-toggle="sheriff-details" aria-expanded="false" data-show-text="Show filing details (size limits)" data-hide-text="Hide filing details">
+                Show filing details (size limits)
+              </button>
+
+              <div id="sheriff-details" class="details hidden" style="margin-top:10px;">
                 ${locationData.MaxFileCCDSOPSheriffDocSize ? `<div class="row"><span class="k">Max Doc Size</span><span class="v">${esc((locationData.MaxFileCCDSOPSheriffDocSize || "").trim())}</span></div>` : ""}
                 ${locationData.MaxFileCCDSOPSheriffEnvSize ? `<div class="row"><span class="k">Max Envelope Size</span><span class="v">${esc((locationData.MaxFileCCDSOPSheriffEnvSize || "").trim())}</span></div>` : ""}
               </div>

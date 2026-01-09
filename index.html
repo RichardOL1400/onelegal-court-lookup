@@ -693,7 +693,7 @@
 
             <div id="${detailsId}" class="details hidden" style="margin-top:10px;">
               ${status ? `<div class="row"><span class="k">Status</span><span class="v">${esc(status)}</span></div>` : ""}
-              ${efm ? `<div class="row"><span class="k">EFM</span><span class="v">${esc(efm)}</span></div>` : ""}
+              ${efm ? `<div class="row"><span class="k">EFM</span><span class="v">${esc(efm)}${efm === 'FSX' ? ` <span style="font-size: 0.9em;">(Additional steps may be required to eFile in this court. <a href="https://support.onelegal.com/court-filing/connect-your-account-to-efile-in-san-francisco" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">Learn more</a>.)</span>` : efm === 'eFileCA' ? ` <span style="font-size: 0.9em;">(Additional steps may be required to eFile in this court. <a href="https://support.onelegal.com/court-filing/how-do-i-connect-to-my-states-electronic-filing-manager-efm" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">Learn more</a>.)</span>` : ''}</span></div>` : ""}
               ${maxDoc ? `<div class="row"><span class="k">Max Doc Size</span><span class="v">${esc(maxDoc)}</span></div>` : ""}
               ${maxEnv ? `<div class="row"><span class="k">Max Envelope Size</span><span class="v">${esc(maxEnv)}</span></div>` : ""}
             </div>

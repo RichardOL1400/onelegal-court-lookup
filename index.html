@@ -759,7 +759,7 @@
               <div class="deadline-box">
                 <div class="label">Order by</div>
                 <div class="time">${esc((locationData.FileDeadline || "").trim())}</div>
-                <div class="hint">${locationData.FileServiceLevel ? `<strong>${esc((locationData.FileServiceLevel || "").trim())}</strong> service` : ""}</div>
+                <div class="hint">${locationData.FileServiceLevel ? `<strong>${esc((locationData.FileServiceLevel || "").trim())}</strong> service <em>(Service levels are calculated in business days only, excluding weekends and court holidays.)</em>` : ""}</div>
               </div>
             ` : ""}
 
@@ -785,7 +785,7 @@
               <div class="deadline-box">
                 <div class="label">Order by</div>
                 <div class="time">${esc((locationData.CCDeliveryDeadline || "").trim())}</div>
-                <div class="hint">${locationData.CCDeliveryServiceLevel ? `<strong>${esc((locationData.CCDeliveryServiceLevel || "").trim())}</strong> service` : ""}</div>
+                <div class="hint">${locationData.CCDeliveryServiceLevel ? `<strong>${esc((locationData.CCDeliveryServiceLevel || "").trim())}</strong> service <em>(Service levels are calculated in business days only, excluding weekends and court holidays.)</em>` : ""}</div>
               </div>
             ` : ""}
 
@@ -811,7 +811,7 @@
               <div class="deadline-box">
                 <div class="label">Order by</div>
                 <div class="time">${esc((locationData.SheriffDeadline || "").trim())}</div>
-                <div class="hint">${locationData.SheriffServiceLevel ? `<strong>${esc((locationData.SheriffServiceLevel || "").trim())}</strong> service` : ""}</div>
+                <div class="hint">${locationData.SheriffServiceLevel ? `<strong>${esc((locationData.SheriffServiceLevel || "").trim())}</strong> service <em>(Service levels are calculated in business days only, excluding weekends and court holidays.)</em>` : ""}</div>
               </div>
             ` : ""}
 

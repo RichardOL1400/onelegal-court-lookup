@@ -375,6 +375,31 @@
 
     .summary-label { font-weight: 600; }
 
+    .summary-divider {
+      height: 1px;
+      background: #d8e5ee;
+      margin: 12px 0;
+    }
+
+    .concierge-text {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .concierge-details {
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .concierge-details a {
+      color: #3a6edc;
+      text-decoration: none;
+    }
+
+    .concierge-details a:hover {
+      text-decoration: underline;
+    }
+
     /* Prompt */
     .prompt {
       margin-top: 24px;
@@ -635,6 +660,10 @@
                 ${pillHTML(canSheriff)}
               </div>
             ` : ''}
+            <div class="summary-divider"></div>
+            <div class="summary-item">
+              <span class="concierge-text">Concierge <span class="concierge-details">(One Legal places your order for you—same-day turnaround if submitted before 4pm PT on a business day. <a href="https://support.onelegal.com/concierge/one-legal-concierge-service" target="_blank" rel="noopener noreferrer">Learn more</a>.)</span></span>
+            </div>
           </div>
         `;
         show($summary);

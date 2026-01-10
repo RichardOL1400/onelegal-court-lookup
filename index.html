@@ -446,11 +446,168 @@
     }
 
     .footer div { margin-bottom: 6px; }
+
+    /* Print Button */
+    .print-button {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      background: #3a6edc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .print-button:hover {
+      background: #2d5ab8;
+    }
+
+    .print-button svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Print Styles */
+    @media print {
+      html, body {
+        background: white;
+      }
+
+      #form-container {
+        max-width: 100%;
+        width: 100%;
+        padding: 0.5in;
+        margin: 0;
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+      }
+
+      /* Hide interactive elements */
+      .print-button,
+      .reset-link,
+      .combobox,
+      .helper-text,
+      .toggle,
+      .field {
+        display: none !important;
+      }
+
+      /* Show all details when printing */
+      .details.hidden {
+        display: block !important;
+      }
+
+      /* Adjust typography for print */
+      h1 {
+        font-size: 20px;
+        margin-bottom: 16px;
+      }
+
+      h2 {
+        font-size: 16px;
+        page-break-after: avoid;
+      }
+
+      h3 {
+        page-break-after: avoid;
+      }
+
+      .subhead {
+        display: none;
+      }
+
+      /* Ensure cards don't break across pages */
+      .card {
+        page-break-inside: avoid;
+        border: 1px solid #d0d0d0;
+        margin-bottom: 16px;
+      }
+
+      .section {
+        page-break-inside: avoid;
+      }
+
+      /* Simplify colors for print */
+      .pill {
+        border: 1px solid #000;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .pill.available {
+        background: #e8f6ee !important;
+        border-color: #0f6b2f !important;
+      }
+
+      .pill.unavailable {
+        background: #fdeaea !important;
+        border-color: #9b1c1c !important;
+      }
+
+      .pill.info {
+        background: #eef5fb !important;
+        border-color: #0f4f6b !important;
+      }
+
+      /* Deadline boxes */
+      .deadline-box {
+        background: #f5f5f5 !important;
+        border: 1px solid #666 !important;
+        page-break-inside: avoid;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      /* Availability summary */
+      .availability-summary {
+        background: #f5f5f5 !important;
+        border: 1px solid #666 !important;
+        page-break-inside: avoid;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      /* Links */
+      a {
+        color: #000;
+        text-decoration: underline;
+      }
+
+      /* Hide confirmation and prompt */
+      .prompt,
+      .confirmation {
+        display: none !important;
+      }
+
+      /* Footer */
+      .footer {
+        margin-top: 24px;
+        font-size: 10px;
+        page-break-inside: avoid;
+      }
+    }
   </style>
 </head>
 
 <body>
   <div id="form-container">
+    <button class="print-button" id="print-button" type="button" aria-label="Print court information">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      Print
+    </button>
     <h1>Court Service Availability</h1>
     <div class="subhead">
       Select a <strong>court</strong> to see eFiling availability.<br>
@@ -539,6 +696,7 @@
     const $listbox = document.getElementById('courthouse-listbox');
 
     const $reset = document.getElementById('reset-button');
+    const $printButton = document.getElementById('print-button');
     const $summary = document.getElementById('summary');
     const $efiling = document.getElementById('efiling');
     const $results = document.getElementById('results');
@@ -1341,6 +1499,37 @@
       hide($confirmation);
       sendHeightSoon();
       scrollToEl(document.getElementById('form-container'));
+    });
+
+    // ----- Print -----
+    $printButton.addEventListener('click', () => {
+      try {
+        // Before printing, expand all hidden details sections so they print
+        const hiddenDetails = document.querySelectorAll('.details.hidden');
+        const wasHidden = [];
+
+        hiddenDetails.forEach((detail, index) => {
+          wasHidden[index] = true;
+          detail.classList.remove('hidden');
+        });
+
+        // Trigger print dialog
+        window.print();
+
+        // After printing (or canceling), restore hidden state
+        // Note: There's no reliable way to detect when print dialog closes,
+        // so we restore after a short delay
+        setTimeout(() => {
+          hiddenDetails.forEach((detail, index) => {
+            if (wasHidden[index]) {
+              detail.classList.add('hidden');
+            }
+          });
+        }, 100);
+      } catch (error) {
+        console.error('Error printing:', error);
+        alert('Unable to print. Please try using your browser\'s print function (Ctrl+P or Cmd+P).');
+      }
     });
 
     // ----- URL PRESELECT (supports commas etc.) -----

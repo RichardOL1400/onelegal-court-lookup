@@ -7,14 +7,14 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     * { box-sizing: border-box; }
     html, body { background: transparent; margin: 0; padding: 0; }
 
     body {
-      font-family: "IBM Plex Sans", sans-serif;
+      font-family: Roboto, Helvetica, sans-serif;
       font-size: 14px;
       line-height: 1.5;
     }
@@ -109,7 +109,7 @@
       padding: 0 48px 0 14px;
       border: none;
       outline: none;
-      font-family: "IBM Plex Sans", sans-serif;
+      font-family: Roboto, Helvetica, sans-serif;
       font-size: 14px;
       line-height: 1.5;
       background: transparent;
@@ -121,8 +121,8 @@
     }
 
     .combobox:focus-within:not(.disabled) {
-      border-color: #3a6edc;
-      box-shadow: 0 0 0 3px rgba(58,110,220,0.15);
+      border-color: #008ab0;
+      box-shadow: 0 0 0 3px rgba(0,138,176,0.15);
     }
 
     .combobox-chevron {
@@ -194,14 +194,14 @@
       margin-top: 8px;
       background: none;
       border: none;
-      color: #3a6edc;
+      color: #008ab0;
       font-size: 13px;
       cursor: pointer;
       padding: 0;
       text-decoration: underline;
     }
 
-    .reset-link:hover { color: #2d5ab8; }
+    .reset-link:hover { color: #006b8a; }
 
     /* Sections and Cards */
     .section { margin-top: 24px; }
@@ -301,8 +301,8 @@
     .deadline-box {
       padding: 14px 16px;
       border-radius: 8px;
-      background: #eef5fb;
-      border: 1px solid rgba(30,111,151,0.20);
+      background: #f0fcff;
+      border: solid 1px #008ab0;
       margin-top: 12px;
     }
 
@@ -399,7 +399,7 @@
     }
 
     .concierge-details a {
-      color: #3a6edc;
+      color: #008ab0;
       text-decoration: none;
     }
 
@@ -452,7 +452,7 @@
       position: absolute;
       top: 30px;
       right: 30px;
-      background: #3a6edc;
+      background: #008ab0;
       color: white;
       border: none;
       border-radius: 6px;
@@ -467,7 +467,7 @@
     }
 
     .print-button:hover {
-      background: #2d5ab8;
+      background: #006b8a;
     }
 
     .print-button svg {
@@ -934,12 +934,12 @@
 
             <div id="${detailsId}" class="details hidden" style="margin-top:10px;">
               ${status ? `<div class="row"><span class="k">Status</span><span class="v">${esc(status)}</span></div>` : ""}
-              ${efm ? `<div class="row"><span class="k">EFM</span><span class="v">${esc(efm)}${efm === 'FSX' ? ` <span style="font-size: 0.9em;">(Additional steps may be required to eFile in this court. <a href="https://support.onelegal.com/court-filing/connect-your-account-to-efile-in-san-francisco" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">Learn more</a>.)</span>` : efm === 'eFileCA' ? ` <span style="font-size: 0.9em;">(Additional steps may be required to eFile in this court. <a href="https://support.onelegal.com/court-filing/how-do-i-connect-to-my-states-electronic-filing-manager-efm" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">Learn more</a>.)</span>` : ''}</span></div>` : ""}
+              ${efm ? `<div class="row"><span class="k">EFM</span><span class="v">${esc(efm)}${efm === 'FSX' ? ` <span style="font-size: 0.9em;">(Additional steps may be required to eFile in this court. <a href="https://support.onelegal.com/court-filing/connect-your-account-to-efile-in-san-francisco" target="_blank" rel="noopener noreferrer" style="color: #008ab0; text-decoration: underline;">Learn more</a>.)</span>` : efm === 'eFileCA' ? ` <span style="font-size: 0.9em;">(Additional steps may be required to eFile in this court. <a href="https://support.onelegal.com/court-filing/how-do-i-connect-to-my-states-electronic-filing-manager-efm" target="_blank" rel="noopener noreferrer" style="color: #008ab0; text-decoration: underline;">Learn more</a>.)</span>` : ''}</span></div>` : ""}
               ${maxDoc ? `<div class="row"><span class="k">Max Doc Size</span><span class="v">${esc(maxDoc)}</span></div>` : ""}
               ${maxEnv ? `<div class="row"><span class="k">Max Envelope Size</span><span class="v">${esc(maxEnv)}</span></div>` : ""}
-              ${courtWebsite ? `<div class="row"><span class="k">Court website</span><span class="v"><a href="${esc(courtWebsite)}" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">Website</a></span></div>` : ""}
-              ${efileFAQs ? `<div class="row"><span class="k">eFiling FAQs</span><span class="v"><a href="${esc(efileFAQs)}" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">FAQs</a></span></div>` : ""}
-              ${localRules ? `<div class="row"><span class="k">Local Rules</span><span class="v"><a href="${esc(localRules)}" target="_blank" rel="noopener noreferrer" style="color: #3a6edc; text-decoration: underline;">Rules</a></span></div>` : ""}
+              ${courtWebsite ? `<div class="row"><span class="k">Court website</span><span class="v"><a href="${esc(courtWebsite)}" target="_blank" rel="noopener noreferrer" style="color: #008ab0; text-decoration: underline;">Website</a></span></div>` : ""}
+              ${efileFAQs ? `<div class="row"><span class="k">eFiling FAQs</span><span class="v"><a href="${esc(efileFAQs)}" target="_blank" rel="noopener noreferrer" style="color: #008ab0; text-decoration: underline;">FAQs</a></span></div>` : ""}
+              ${localRules ? `<div class="row"><span class="k">Local Rules</span><span class="v"><a href="${esc(localRules)}" target="_blank" rel="noopener noreferrer" style="color: #008ab0; text-decoration: underline;">Rules</a></span></div>` : ""}
             </div>
           ` : `
             <p style="color:#6b6b6b; font-size:13px;">This court does not currently offer eFiling through One Legal.</p>
@@ -1304,13 +1304,13 @@
               style="
                 margin-top: 16px;
                 padding: 10px 20px;
-                background: #3a6edc;
+                background: #008ab0;
                 color: white;
                 border: none;
                 border-radius: 6px;
                 font-size: 14px;
                 cursor: pointer;
-                font-family: 'IBM Plex Sans', sans-serif;
+                font-family: Roboto, Helvetica, sans-serif;
               "
             >
               Retry

@@ -475,6 +475,24 @@
       height: 16px;
     }
 
+    /* Print Title - Hidden on screen, shown in print */
+    .print-title {
+      display: none;
+    }
+
+    .print-title h1 {
+      margin: 0 0 4px 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .print-title h2 {
+      margin: 0 0 20px 0;
+      font-size: 18px;
+      font-weight: 500;
+      color: #666;
+    }
+
     /* Print Styles */
     @media print {
       html, body {
@@ -489,6 +507,14 @@
         box-shadow: none;
         border: none;
         border-radius: 0;
+      }
+
+      /* Show print title */
+      .print-title {
+        display: block !important;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #333;
       }
 
       /* Hide interactive elements */
@@ -608,6 +634,13 @@
       </svg>
       Print
     </button>
+
+    <!-- Print-only title -->
+    <div class="print-title" id="print-title">
+      <h1 id="print-court-name"></h1>
+      <h2 id="print-location-name"></h2>
+    </div>
+
     <h1>Court Service Availability</h1>
     <div class="subhead">
       Select a <strong>court</strong> to see eFiling availability.<br>
@@ -697,6 +730,8 @@
 
     const $reset = document.getElementById('reset-button');
     const $printButton = document.getElementById('print-button');
+    const $printCourtName = document.getElementById('print-court-name');
+    const $printLocationName = document.getElementById('print-location-name');
     const $summary = document.getElementById('summary');
     const $efiling = document.getElementById('efiling');
     const $results = document.getElementById('results');
@@ -721,6 +756,11 @@
 
     function hide(el){ el.classList.add('hidden'); }
     function show(el){ el.classList.remove('hidden'); }
+
+    function updatePrintTitle() {
+      $printCourtName.textContent = currentCourtName || '';
+      $printLocationName.textContent = selectedLocation?.Name || '';
+    }
 
     function formatAddress(r) {
       const a1 = (r.Address_Address1 || "").trim();
@@ -1160,6 +1200,9 @@
         $comboboxInput.value = locationData.Name || '';
         closeListbox();
 
+        // Update print title
+        updatePrintTitle();
+
         const courtWide = data.find(r => r.DisplayName === currentCourtName);
 
         if (!courtWide) {
@@ -1395,6 +1438,9 @@
         $listbox.innerHTML = "";
         closeListbox();
 
+        // Update print title
+        updatePrintTitle();
+
         hide($results);
         hide($physicalPrompt);
         hide($summary);
@@ -1497,6 +1543,10 @@
       hide($physicalPrompt);
       hide($summary);
       hide($confirmation);
+
+      // Clear print title
+      updatePrintTitle();
+
       sendHeightSoon();
       scrollToEl(document.getElementById('form-container'));
     });

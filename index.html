@@ -2013,64 +2013,50 @@ Wants Follow-up: ${formData.followup}
 Submitted at: ${new Date().toLocaleString()}
         `.trim();
 
-        // CONFIGURATION: Choose your email service
-        //
-        // OPTION 1: Web3Forms (Recommended - Free, no backend required)
-        // 1. Get your access key from https://web3forms.com
-        // 2. Replace 'YOUR_WEB3FORMS_ACCESS_KEY' below with your actual key
-        const web3formsAccessKey = 'YOUR_WEB3FORMS_ACCESS_KEY';
+        // Using Formspree for email delivery
+        // Formspree is a free service (50 submissions/month on free tier)
+        // The form endpoint below is configured to send to richard.heinrich@infotrack.com
+        const formspreeEndpoint = 'https://formspree.io/f/xovqrdev';
 
-        // OPTION 2: Formspree (Alternative)
-        // 1. Sign up at https://formspree.io
-        // 2. Create a form and get your form ID
-        // 3. Use: const endpoint = 'https://formspree.io/f/YOUR_FORM_ID';
-
-        // OPTION 3: Custom backend endpoint
-        // Point to your own API endpoint that sends emails
-
-        // Check if Web3Forms is configured
-        if (web3formsAccessKey && web3formsAccessKey !== 'YOUR_WEB3FORMS_ACCESS_KEY') {
-          // Send via Web3Forms
-          const response = await fetch('https://api.web3forms.com/submit', {
+        try {
+          const response = await fetch(formspreeEndpoint, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
             },
             body: JSON.stringify({
-              access_key: web3formsAccessKey,
-              subject: 'Court Deadline and Service Level Tool: Data Inaccuracy Report',
-              from_name: 'Court Lookup Tool',
-              to: 'richard.heinrich@infotrack.com',
-              reply_to: formData.email,
-              message: emailMessage,
+              _subject: 'Court Deadline and Service Level Tool: Data Inaccuracy Report',
+              _replyto: formData.email,
               court: formData.court,
               location: formData.location,
-              issue_description: formData.issue,
-              reporter_email: formData.email,
-              wants_followup: formData.followup
+              issue: formData.issue,
+              email: formData.email,
+              followup: formData.followup,
+              message: emailMessage,
+              _template: 'box'
             })
           });
 
-          const result = await response.json();
-
-          if (!response.ok || !result.success) {
-            throw new Error(result.message || 'Failed to send report');
+          if (!response.ok) {
+            throw new Error('Failed to send report');
           }
 
           // Show success message
           alert('Thank you for your report! Your feedback has been sent successfully.');
-        } else {
-          // Fallback to mailto if no service is configured
-          const mailtoUrl = `mailto:richard.heinrich@infotrack.com?subject=${encodeURIComponent('Court Deadline and Service Level Tool: Data Inaccuracy Report')}&body=${encodeURIComponent(emailMessage)}`;
 
+          // Close modal
+          closeFeedbackModal();
+        } catch (fetchError) {
+          console.error('Formspree error:', fetchError);
+
+          // If Formspree fails, fall back to mailto
+          const mailtoUrl = `mailto:richard.heinrich@infotrack.com?subject=${encodeURIComponent('Court Deadline and Service Level Tool: Data Inaccuracy Report')}&body=${encodeURIComponent(emailMessage)}`;
           window.location.href = mailtoUrl;
 
-          // Show info message
-          alert('Your email client will open with the pre-filled report. Please send the email to submit your feedback.');
+          // Close modal
+          closeFeedbackModal();
         }
-
-        // Close modal
-        closeFeedbackModal();
 
       } catch (error) {
         console.error('Error submitting feedback:', error);

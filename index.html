@@ -925,8 +925,8 @@
 
             <div class="deadline-box">
               <div class="label">Court Deadline</div>
-              <div class="time">${esc(deadline)}</div>
-              <div class="hint">Submit through One Legal by <strong>${esc(recBy)}</strong> to meet this deadline.</div>
+              <div class="time">${esc(deadline)} PT</div>
+              <div class="hint">Submit through One Legal by <strong>${esc(recBy)} PT</strong> to meet this deadline.</div>
             </div>
 
             <button class="toggle" type="button" data-toggle="${detailsId}" aria-expanded="false" data-show-text="eFiling details ▼" data-hide-text="eFiling details ▲">
@@ -997,7 +997,7 @@
             ${(locationData.FileDeadline || locationData.FileServiceLevel) ? `
               <div class="deadline-box">
                 <div class="label">Order by</div>
-                <div class="time">${esc((locationData.FileDeadline || "").trim())}</div>
+                <div class="time">${esc((locationData.FileDeadline || "").trim())} PT</div>
                 <div class="hint">${locationData.FileServiceLevel ? `<strong>${esc((locationData.FileServiceLevel || "").trim())}</strong> service <em>(Service levels are calculated in business days only, excluding weekends and court holidays.)</em>` : ""}</div>
               </div>
             ` : ""}
@@ -1023,7 +1023,7 @@
             ${(locationData.CCDeliveryDeadline || locationData.CCDeliveryServiceLevel) ? `
               <div class="deadline-box">
                 <div class="label">Order by</div>
-                <div class="time">${esc((locationData.CCDeliveryDeadline || "").trim())}</div>
+                <div class="time">${esc((locationData.CCDeliveryDeadline || "").trim())} PT</div>
                 <div class="hint">${locationData.CCDeliveryServiceLevel ? `<strong>${esc((locationData.CCDeliveryServiceLevel || "").trim())}</strong> service <em>(Service levels are calculated in business days only, excluding weekends and court holidays.)</em>` : ""}</div>
               </div>
             ` : ""}
@@ -1049,7 +1049,7 @@
             ${(locationData.SheriffDeadline || locationData.SheriffServiceLevel) ? `
               <div class="deadline-box">
                 <div class="label">Order by</div>
-                <div class="time">${esc((locationData.SheriffDeadline || "").trim())}</div>
+                <div class="time">${esc((locationData.SheriffDeadline || "").trim())} PT</div>
                 <div class="hint">${locationData.SheriffServiceLevel ? `<strong>${esc((locationData.SheriffServiceLevel || "").trim())}</strong> service <em>(Service levels are calculated in business days only, excluding weekends and court holidays.)</em>` : ""}</div>
               </div>
             ` : ""}
